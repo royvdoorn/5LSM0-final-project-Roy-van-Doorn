@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as function
 
 """ segmentation model example
 """
@@ -105,4 +106,37 @@ class decoder_block(nn.Module):
         x = torch.cat([x, skip], axis=1)
         x = self.conv(x)
 
+        return x
+
+
+class CNN_autoencoder(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv_1a = nn.Conv2d(3, 32, 3, 1, padding='same')
+        self.norm_1 = nn.BatchNorm2d(32)
+        self.conv_1b = nn.Conv2d(32, 32, 3, 1, padding='same')
+        self.conv_2a = nn.Conv2d(32, 64, 3, 1, padding='same')
+        self.norm_2 = nn.BatchNorm2d(64)
+        self.conv_2b = nn.Conv2d(64, 64, 3, 1, padding='same')
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv_3 = nn.Conv2d(64, 128, 3, 1, padding='same')
+
+        self.conv_3a = nn.ConvTranspose2d(128, 64, 3, 1, padding=1)
+        self.conv_3b = nn.ConvTranspose2d(64, 64, 5, 1, padding=1) #1
+        self.conv_3c = nn.ConvTranspose2d(64, 32, 3, 2, padding=1, output_padding=1) #2
+        self.conv_4a = nn.ConvTranspose2d(32, 32, 5, 1, padding=3) #3
+        self.conv_4b = nn.ConvTranspose2d(32, 1, 3, 2, padding=3, output_padding=1) #1
+        self.dropout = nn.Dropout(0.25)
+
+    def forward(self, x):
+        x = self.norm_1(function.relu(self.conv_1a(x)))
+        x = self.dropout(self.pool(self.norm_1(function.relu(self.conv_1b(x)))))
+        x = self.norm_2(function.relu(self.conv_2a(x)))
+        x = self.dropout(self.pool(self.norm_2(function.relu(self.conv_2b(x)))))
+        x = function.relu(self.conv_3(x))
+        x = function.relu(self.conv_3a(x))
+        x = self.norm_2(function.relu(self.conv_3b(x)))
+        x = self.dropout(self.norm_1(function.relu(self.conv_3c(x))))
+        x = self.norm_1(function.relu(self.conv_4a(x)))
+        x = self.dropout(function.sigmoid(self.conv_4b(x)))
         return x
