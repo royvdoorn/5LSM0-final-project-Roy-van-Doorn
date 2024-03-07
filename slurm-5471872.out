@@ -1,0 +1,20 @@
+/var/spool/slurm/slurmd/job5471872/slurm_script: line 9: cd: /gpfs/home4/scur0756/FinalAssignment: No such file or directory
+mkdir: cannot create directory 'wandb/5471872': No such file or directory
+run_container.sh: line 1: syntax error near unexpected token `newline'
+run_container.sh: line 1: `export WANDB_API_KEY=<API_KEY>'
+srun: error: gcn20: task 0: Exited with exit code 2
+srun: Terminating StepId=5471872.0
+
+JOB STATISTICS
+==============
+Job ID: 5471872
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: FAILED (exit code 2)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:06:36 core-walltime
+Job Wall-clock time: 00:00:22
+Memory Utilized: 1.16 MB
+Memory Efficiency: 0.00% of 120.00 GB
