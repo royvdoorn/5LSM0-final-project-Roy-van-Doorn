@@ -6,7 +6,7 @@
 #SBATCH --partition=gpu
 #SBATCH --time=0:01:00
 
-cd /gpfs/home4/scur0756/Final_Assignment/5LSM0-final-project-Roy-van-Doorn
+cd /gpfs/home6/scur0756/Final_Assignment/5LSM0-final-project-Roy-van-Doorn/
 mkdir wandb/$SLURM_JOBID
 
 srun apptainer exec --nv /gpfs/work5/0/jhstue005/JHS_data/5lsm0_v1.sif /bin/bash run_container.sh
