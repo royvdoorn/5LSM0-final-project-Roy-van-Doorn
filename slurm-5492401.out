@@ -1,0 +1,24 @@
+wandb: Currently logged in as: r-v-doorn1 (royvdoorn). Use `wandb login --relogin` to force relogin
+/usr/local/lib/python3.10/dist-packages/torchvision/transforms/v2/_deprecated.py:43: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.
+  warnings.warn(
+Loss of batch at epoch 1 : 0.9135896563529968
+Loss of batch at epoch 1 : 0.9086577892303467
+Loss of batch at epoch 1 : 0.8936063647270203
+Loss of batch at epoch 1 : 0.8882003426551819
+slurmstepd: error: *** STEP 5492401.0 ON gcn22 CANCELLED AT 2024-03-09T10:53:22 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 5492401 ON gcn22 CANCELLED AT 2024-03-09T10:53:22 DUE TO TIME LIMIT ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+
+JOB STATISTICS
+==============
+Job ID: 5492401
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:10
+CPU Efficiency: 0.85% of 00:19:30 core-walltime
+Job Wall-clock time: 00:01:05
+Memory Utilized: 14.96 GB
+Memory Efficiency: 12.47% of 120.00 GB
