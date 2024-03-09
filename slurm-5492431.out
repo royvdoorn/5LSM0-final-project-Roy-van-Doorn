@@ -109,3 +109,51 @@ Loss of batch at epoch 1 : 0.8758019804954529
 Loss of batch at epoch 1 : 0.8779852986335754
 Loss of batch at epoch 1 : 0.8714463710784912
 Loss of batch at epoch 1 : 0.8761236071586609
+[2024-03-09 11:34:07,175] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: -9) local_rank: 0 (pid: 3591632) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+  File "/usr/local/lib/python3.10/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 346, in wrapper
+    return f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/torch/distributed/run.py", line 806, in main
+    run(args)
+  File "/usr/local/lib/python3.10/dist-packages/torch/distributed/run.py", line 797, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.10/dist-packages/torch/distributed/launcher/api.py", line 134, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/usr/local/lib/python3.10/dist-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+========================================================
+train.py FAILED
+--------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+--------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2024-03-09_11:34:07
+  host      : gcn29.local.snellius.surf.nl
+  rank      : 0 (local_rank: 0)
+  exitcode  : -9 (pid: 3591632)
+  error_file: <N/A>
+  traceback : Signal 9 (SIGKILL) received by PID 3591632
+========================================================
+slurmstepd: error: Detected 1 oom_kill event in StepId=5492431.0. Some of the step tasks have been OOM Killed.
+srun: error: gcn29: task 0: Out Of Memory
+srun: Terminating StepId=5492431.0
+
+JOB STATISTICS
+==============
+Job ID: 5492431
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: RUNNING
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 05:03:36 core-walltime
+Job Wall-clock time: 00:16:52
+Memory Utilized: 0.00 MB (estimated maximum)
+Memory Efficiency: 0.00% of 120.00 GB (120.00 GB/node)
+WARNING: Efficiency statistics may be misleading for RUNNING jobs.
