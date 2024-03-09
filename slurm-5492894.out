@@ -103,3 +103,102 @@ Loss of batch at epoch 1 : 0.8677759170532227
 Loss of batch at epoch 1 : 0.8708533644676208
 Loss of batch at epoch 1 : 0.8694272041320801
 Loss of batch at epoch 1 : 0.8700924515724182
+Loss of batch at epoch 1 : 0.8686401844024658
+Loss of batch at epoch 1 : 0.8674086928367615
+Loss of batch at epoch 1 : 0.878329336643219
+Loss of batch at epoch 1 : 0.8718988299369812
+Loss of batch at epoch 1 : 0.8693966865539551
+Loss of batch at epoch 1 : 0.8758534789085388
+Average train loss of epoch 0: 0.03528835419134207
+Average validation loss of epoch 0: 0.03519291026825054
+Loss of batch at epoch 2 : 0.8691003918647766
+Loss of batch at epoch 2 : 0.8690848350524902
+Loss of batch at epoch 2 : 0.8721418976783752
+Loss of batch at epoch 2 : 0.8703024387359619
+Loss of batch at epoch 2 : 0.8684704899787903
+Loss of batch at epoch 2 : 0.8725301623344421
+Loss of batch at epoch 2 : 0.8683577179908752
+Loss of batch at epoch 2 : 0.8736666440963745
+Loss of batch at epoch 2 : 0.8776238560676575
+Loss of batch at epoch 2 : 0.8723998665809631
+Loss of batch at epoch 2 : 0.871443510055542
+Loss of batch at epoch 2 : 0.8707053661346436
+Loss of batch at epoch 2 : 0.8710426092147827
+Loss of batch at epoch 2 : 0.8667334318161011
+Loss of batch at epoch 2 : 0.8698737621307373
+Loss of batch at epoch 2 : 0.8712195158004761
+Loss of batch at epoch 2 : 0.8736087679862976
+Loss of batch at epoch 2 : 0.8724676966667175
+Loss of batch at epoch 2 : 0.8689464926719666
+Loss of batch at epoch 2 : 0.8660922646522522
+Loss of batch at epoch 2 : 0.8677567839622498
+Loss of batch at epoch 2 : 0.8699833154678345
+Loss of batch at epoch 2 : 0.869382917881012
+Loss of batch at epoch 2 : 0.8670246005058289
+Loss of batch at epoch 2 : 0.8661260008811951
+Loss of batch at epoch 2 : 0.8704147934913635
+Loss of batch at epoch 2 : 0.8732333779335022
+Loss of batch at epoch 2 : 0.8643469214439392
+Loss of batch at epoch 2 : 0.8662289977073669
+Loss of batch at epoch 2 : 0.866209089756012
+Loss of batch at epoch 2 : 0.8692900538444519
+Loss of batch at epoch 2 : 0.8752164244651794
+Loss of batch at epoch 2 : 0.8705045580863953
+Loss of batch at epoch 2 : 0.8660433292388916
+Loss of batch at epoch 2 : 0.8755699396133423
+Loss of batch at epoch 2 : 0.8699609637260437
+Loss of batch at epoch 2 : 0.8699355125427246
+Loss of batch at epoch 2 : 0.8708396553993225
+Loss of batch at epoch 2 : 0.8703343868255615
+Loss of batch at epoch 2 : 0.8664777874946594
+Loss of batch at epoch 2 : 0.8750087022781372
+Loss of batch at epoch 2 : 0.8686806559562683
+Loss of batch at epoch 2 : 0.8766379356384277
+Loss of batch at epoch 2 : 0.8661051392555237
+Loss of batch at epoch 2 : 0.8688912391662598
+Loss of batch at epoch 2 : 0.8692246675491333
+Loss of batch at epoch 2 : 0.8679671883583069
+Loss of batch at epoch 2 : 0.8712038397789001
+Loss of batch at epoch 2 : 0.8662194609642029
+Loss of batch at epoch 2 : 0.866690993309021
+Loss of batch at epoch 2 : 0.8709208965301514
+Loss of batch at epoch 2 : 0.8629842400550842
+Loss of batch at epoch 2 : 0.8661901950836182
+Loss of batch at epoch 2 : 0.8768125772476196
+Loss of batch at epoch 2 : 0.8671547770500183
+Loss of batch at epoch 2 : 0.8715605139732361
+Loss of batch at epoch 2 : 0.8705512285232544
+Loss of batch at epoch 2 : 0.8746870756149292
+Loss of batch at epoch 2 : 0.868507444858551
+Loss of batch at epoch 2 : 0.8696692585945129
+Loss of batch at epoch 2 : 0.8664426207542419
+Loss of batch at epoch 2 : 0.8693723678588867
+Loss of batch at epoch 2 : 0.865953803062439
+Loss of batch at epoch 2 : 0.8641566634178162
+Loss of batch at epoch 2 : 0.866010844707489
+Loss of batch at epoch 2 : 0.8632103800773621
+Loss of batch at epoch 2 : 0.8769651651382446
+Loss of batch at epoch 2 : 0.8627669811248779
+Loss of batch at epoch 2 : 0.8646079301834106
+Loss of batch at epoch 2 : 0.8724186420440674
+Loss of batch at epoch 2 : 0.8688716888427734
+Loss of batch at epoch 2 : 0.8667698502540588
+slurmstepd: error: *** JOB 5492894 ON gcn34 CANCELLED AT 2024-03-09T14:42:23 DUE TO TIME LIMIT ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** STEP 5492894.0 ON gcn34 CANCELLED AT 2024-03-09T14:42:23 DUE TO TIME LIMIT ***
+slurmstepd: error: container_p_join: setns failed for /slurm/5492894/.ns: Invalid argument
+slurmstepd: error: container_g_join(5492894): Invalid argument
+
+JOB STATISTICS
+==============
+Job ID: 5492894
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 09:01:12 core-walltime
+Job Wall-clock time: 00:30:04
+Memory Utilized: 6.51 MB
+Memory Efficiency: 0.00% of 360.00 GB
