@@ -1,0 +1,38 @@
+wandb: Currently logged in as: r-v-doorn1 (royvdoorn). Use `wandb login --relogin` to force relogin
+/usr/local/lib/python3.10/dist-packages/torchvision/transforms/v2/_deprecated.py:43: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.
+  warnings.warn(
+Loss of batch at epoch 1 : 0.9186159372329712
+Loss of batch at epoch 1 : 0.9063513875007629
+Loss of batch at epoch 1 : 0.898714542388916
+Loss of batch at epoch 1 : 0.888862133026123
+Loss of batch at epoch 1 : 0.8869774341583252
+Loss of batch at epoch 1 : 0.8880674839019775
+Loss of batch at epoch 1 : 0.8795775771141052
+Loss of batch at epoch 1 : 0.8845362663269043
+Loss of batch at epoch 1 : 0.8838880062103271
+Loss of batch at epoch 1 : 0.8849156498908997
+Loss of batch at epoch 1 : 0.8789646625518799
+Loss of batch at epoch 1 : 0.8818930983543396
+Loss of batch at epoch 1 : 0.8787012696266174
+Loss of batch at epoch 1 : 0.8786799907684326
+Loss of batch at epoch 1 : 0.88325434923172
+Loss of batch at epoch 1 : 0.8756886720657349
+Loss of batch at epoch 1 : 0.8807776570320129
+Loss of batch at epoch 1 : 0.8796036243438721
+Loss of batch at epoch 1 : 0.8765977025032043
+Loss of batch at epoch 1 : 0.8748422265052795
+Loss of batch at epoch 1 : 0.8765685558319092
+Loss of batch at epoch 1 : 0.8836364150047302
+Loss of batch at epoch 1 : 0.8743923902511597
+Loss of batch at epoch 1 : 0.876669704914093
+Loss of batch at epoch 1 : 0.8764558434486389
+Loss of batch at epoch 1 : 0.871787428855896
+Loss of batch at epoch 1 : 0.8777710199356079
+Loss of batch at epoch 1 : 0.8774356245994568
+Loss of batch at epoch 1 : 0.8799005150794983
+Loss of batch at epoch 1 : 0.8705174326896667
+Loss of batch at epoch 1 : 0.8793936967849731
+Loss of batch at epoch 1 : 0.8689556121826172
+Loss of batch at epoch 1 : 0.876158595085144
+Loss of batch at epoch 1 : 0.8769086003303528
+Loss of batch at epoch 1 : 0.8749575614929199
