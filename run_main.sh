@@ -5,6 +5,7 @@
 #SBATCH --gpus=1
 #SBATCH --partition=gpu
 #SBATCH --time=0:30:00
+#SBATCH --mem-per-cpu=10G
 
 cd /gpfs/home6/scur0756/Final_Assignment/5LSM0-final-project-Roy-van-Doorn/
 mkdir wandb/$SLURM_JOBID
