@@ -62,7 +62,7 @@ def main(args):
     # visualize example images
 
     # define model
-    model = CNN_autoencoder().cuda()
+    model = CNN_autoencoder()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = DiceLoss()
