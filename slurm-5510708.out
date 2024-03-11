@@ -1,0 +1,88 @@
+wandb: Currently logged in as: r-v-doorn1 (royvdoorn). Use `wandb login --relogin` to force relogin
+/usr/local/lib/python3.10/dist-packages/torchvision/transforms/v2/_deprecated.py:43: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.
+  warnings.warn(
+Loss of batch at epoch 1 : 1.022013545036316
+Loss of batch at epoch 1 : 0.6699416637420654
+Loss of batch at epoch 1 : 1.9522026777267456
+Loss of batch at epoch 1 : 1.061089038848877
+Loss of batch at epoch 1 : 1.0232572555541992
+Loss of batch at epoch 1 : 0.9925726056098938
+Loss of batch at epoch 1 : 0.9644131064414978
+Loss of batch at epoch 1 : 0.9778584837913513
+Loss of batch at epoch 1 : 0.9768969416618347
+Loss of batch at epoch 1 : 0.9670410752296448
+Loss of batch at epoch 1 : 0.9449673295021057
+Loss of batch at epoch 1 : 0.9448181390762329
+Loss of batch at epoch 1 : 0.9491679072380066
+Loss of batch at epoch 1 : 0.9356741905212402
+Loss of batch at epoch 1 : 0.9242985248565674
+Loss of batch at epoch 1 : 0.9397271275520325
+Loss of batch at epoch 1 : 0.9235324859619141
+Loss of batch at epoch 1 : 0.930052638053894
+Loss of batch at epoch 1 : 0.919852614402771
+Loss of batch at epoch 1 : 0.9235063791275024
+Loss of batch at epoch 1 : 0.9046013951301575
+Loss of batch at epoch 1 : 0.895420491695404
+Loss of batch at epoch 1 : 0.880264937877655
+Loss of batch at epoch 1 : 0.8606893420219421
+Loss of batch at epoch 1 : 0.8568547368049622
+Loss of batch at epoch 1 : 0.7954751253128052
+Loss of batch at epoch 1 : 0.7495725154876709
+Loss of batch at epoch 1 : 0.5121569633483887
+Loss of batch at epoch 1 : -7.672809600830078
+Loss of batch at epoch 1 : 1.2426166534423828
+Loss of batch at epoch 1 : 1.2304513454437256
+Loss of batch at epoch 1 : 1.2040294408798218
+Loss of batch at epoch 1 : 1.1465905904769897
+Loss of batch at epoch 1 : 1.1074471473693848
+Loss of batch at epoch 1 : 1.140663504600525
+Loss of batch at epoch 1 : 1.1058529615402222
+Loss of batch at epoch 1 : 1.107487440109253
+Loss of batch at epoch 1 : 1.1121076345443726
+Loss of batch at epoch 1 : 1.083343267440796
+Loss of batch at epoch 1 : 1.0794297456741333
+Loss of batch at epoch 1 : 1.063252329826355
+Loss of batch at epoch 1 : 1.0555802583694458
+Loss of batch at epoch 1 : 1.033693790435791
+Loss of batch at epoch 1 : 1.0547722578048706
+Loss of batch at epoch 1 : 1.021933913230896
+Loss of batch at epoch 1 : 1.038430094718933
+Loss of batch at epoch 1 : 1.0203922986984253
+Loss of batch at epoch 1 : 1.0153658390045166
+Loss of batch at epoch 1 : 1.0289889574050903
+Loss of batch at epoch 1 : 1.013677954673767
+Loss of batch at epoch 1 : 1.0084549188613892
+Loss of batch at epoch 1 : 1.0089117288589478
+Loss of batch at epoch 1 : 0.9856747388839722
+Loss of batch at epoch 1 : 0.9883629679679871
+Loss of batch at epoch 1 : 0.9817090034484863
+Loss of batch at epoch 1 : 0.9860430955886841
+Loss of batch at epoch 1 : 0.9842711687088013
+Loss of batch at epoch 1 : 0.9699503779411316
+Loss of batch at epoch 1 : 0.9603177309036255
+Loss of batch at epoch 1 : 0.9710814952850342
+Loss of batch at epoch 1 : 0.9639615416526794
+Loss of batch at epoch 1 : 0.9314159154891968
+Loss of batch at epoch 1 : 0.9634089469909668
+Loss of batch at epoch 1 : 0.941470205783844
+Loss of batch at epoch 1 : 0.9479259848594666
+Loss of batch at epoch 1 : 0.9387310743331909
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 5510708 ON gcn52 CANCELLED AT 2024-03-11T18:04:18 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 5510708.0 ON gcn52 CANCELLED AT 2024-03-11T18:04:18 DUE TO TIME LIMIT ***
+slurmstepd: error: container_p_join: open failed for /slurm/5510708/.ns: No such file or directory
+slurmstepd: error: container_g_join(5510708): No such file or directory
+
+JOB STATISTICS
+==============
+Job ID: 5510708
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:10
+CPU Efficiency: 0.02% of 18:08:24 core-walltime
+Job Wall-clock time: 01:00:28
+Memory Utilized: 72.27 GB
+Memory Efficiency: 20.07% of 360.00 GB
