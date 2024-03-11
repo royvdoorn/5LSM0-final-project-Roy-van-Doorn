@@ -1,0 +1,55 @@
+wandb: Currently logged in as: r-v-doorn1 (royvdoorn). Use `wandb login --relogin` to force relogin
+/usr/local/lib/python3.10/dist-packages/torchvision/transforms/v2/_deprecated.py:43: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.
+  warnings.warn(
+Loss of batch at epoch 1 : 0.9036418199539185
+Loss of batch at epoch 1 : -0.2188272476196289
+Loss of batch at epoch 1 : 1.1273778676986694
+Loss of batch at epoch 1 : 1.0452048778533936
+Loss of batch at epoch 1 : 0.993811845779419
+Loss of batch at epoch 1 : 0.9848427176475525
+Loss of batch at epoch 1 : 0.9569088816642761
+Loss of batch at epoch 1 : 0.9531700015068054
+Loss of batch at epoch 1 : 0.9525756239891052
+Loss of batch at epoch 1 : 0.9387522339820862
+Loss of batch at epoch 1 : 0.9338670969009399
+Loss of batch at epoch 1 : 0.9204622507095337
+Loss of batch at epoch 1 : 0.9229444861412048
+Loss of batch at epoch 1 : 0.9207366704940796
+Loss of batch at epoch 1 : 0.9127111434936523
+Loss of batch at epoch 1 : 0.9148073196411133
+Loss of batch at epoch 1 : 0.901183009147644
+Loss of batch at epoch 1 : 0.8861842155456543
+Loss of batch at epoch 1 : 0.8837884068489075
+Loss of batch at epoch 1 : 0.8880587816238403
+Loss of batch at epoch 1 : 0.8746112585067749
+Loss of batch at epoch 1 : 0.8657422065734863
+Loss of batch at epoch 1 : 0.8510869741439819
+Loss of batch at epoch 1 : 0.85414719581604
+Loss of batch at epoch 1 : 0.8319721817970276
+Loss of batch at epoch 1 : 0.8317447900772095
+Loss of batch at epoch 1 : 0.777661919593811
+Loss of batch at epoch 1 : 0.7288062572479248
+Loss of batch at epoch 1 : 0.5517367124557495
+Loss of batch at epoch 1 : 1.2598687410354614
+Loss of batch at epoch 1 : 1.083609700202942
+Loss of batch at epoch 1 : 0.9804307222366333
+Loss of batch at epoch 1 : 0.9409118890762329
+slurmstepd: error: *** JOB 5510488 ON gcn52 CANCELLED AT 2024-03-11T16:59:17 DUE TO TIME LIMIT ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** STEP 5510488.0 ON gcn52 CANCELLED AT 2024-03-11T16:59:17 DUE TO TIME LIMIT ***
+slurmstepd: error: container_p_join: setns failed for /slurm/5510488/.ns: Invalid argument
+slurmstepd: error: container_g_join(5510488): Invalid argument
+
+JOB STATISTICS
+==============
+Job ID: 5510488
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:10
+CPU Efficiency: 0.03% of 09:09:00 core-walltime
+Job Wall-clock time: 00:30:30
+Memory Utilized: 71.83 GB
+Memory Efficiency: 19.95% of 360.00 GB
