@@ -62,7 +62,7 @@ def main(args):
     # visualize example images
 
     # define model
-    model = CNN_autoencoder()#.cuda()
+    model = Model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = DiceLoss()
@@ -97,11 +97,11 @@ def main(args):
 
         train_loss.append(float(train_loss_epoch)/train_size)
         val_loss.append(float(val_loss_epoch)/val_size)
-        print("Average train loss of epoch " + str(i) + ": " + str(float(train_loss_epoch)/train_size))
-        print("Average validation loss of epoch " + str(i) + ": " + str(float(val_loss_epoch)/val_size))
+        print("Average train loss of epoch " + str(i+1) + ": " + str(float(train_loss_epoch)/train_size))
+        print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'Simple_CNN')
+    torch.save(model.state_dict(), 'basic_model')
 
     # visualize some results
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -110,7 +110,7 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance Simple CNN')
+    plt.savefig('Train performance basic model')
 
     pass
 
