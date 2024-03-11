@@ -1,0 +1,23 @@
+wandb: Currently logged in as: r-v-doorn1 (royvdoorn). Use `wandb login --relogin` to force relogin
+/usr/local/lib/python3.10/dist-packages/torchvision/transforms/v2/_deprecated.py:43: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.
+  warnings.warn(
+Loss of batch at epoch 1 : 0.9611122012138367
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 5510453 ON gcn52 CANCELLED AT 2024-03-11T16:25:17 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 5510453.0 ON gcn52 CANCELLED AT 2024-03-11T16:25:17 DUE TO TIME LIMIT ***
+slurmstepd: error: container_p_join: open failed for /slurm/5510453/.ns: No such file or directory
+slurmstepd: error: container_g_join(5510453): No such file or directory
+
+JOB STATISTICS
+==============
+Job ID: 5510453
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:10
+CPU Efficiency: 0.62% of 00:27:00 core-walltime
+Job Wall-clock time: 00:01:30
+Memory Utilized: 64.44 GB
+Memory Efficiency: 17.90% of 360.00 GB
