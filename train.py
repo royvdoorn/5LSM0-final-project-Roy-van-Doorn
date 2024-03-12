@@ -12,6 +12,7 @@ from model import Model, CNN_autoencoder
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import utils
 
 
 def get_arg_parser():
@@ -50,8 +51,8 @@ def main(args):
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     # data loading
-    path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    #path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
+    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
     validation_ratio = 0.1
     val_size = int(validation_ratio*len(dataset))
     train_size = len(dataset)-val_size
@@ -85,6 +86,7 @@ def main(args):
         val_loss_epoch = 0
         for X, Y in train_loader:
             target = (Y*255).long().squeeze(1)
+            target = utils.map_id_to_train_id(target).to(device)
             optimizer.zero_grad()
             predictions = model(X)
             loss = criterion(predictions, target)
