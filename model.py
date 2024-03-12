@@ -25,7 +25,7 @@ class Model(nn.Module):
         self.d4 = decoder_block(128, 64)
 
         """ Classifier """
-        self.outputs = nn.Conv2d(64, 1, kernel_size=1, padding=0)
+        self.outputs = nn.Conv2d(64, 34, kernel_size=1, padding=0)
 
     def forward(self, inputs):
         """ Encoder """
@@ -112,20 +112,20 @@ class decoder_block(nn.Module):
 class CNN_autoencoder(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv_1a = nn.Conv2d(3, 32, 3, 1, padding='same')
-        self.norm_1 = nn.BatchNorm2d(32)
-        self.conv_1b = nn.Conv2d(32, 32, 3, 1, padding='same')
-        self.conv_2a = nn.Conv2d(32, 64, 3, 1, padding='same')
-        self.norm_2 = nn.BatchNorm2d(64)
-        self.conv_2b = nn.Conv2d(64, 64, 3, 1, padding='same')
+        self.conv_1a = nn.Conv2d(3, 64, 3, 1, padding='same')
+        self.norm_1 = nn.BatchNorm2d(64)
+        self.conv_1b = nn.Conv2d(64, 64, 3, 1, padding='same')
+        self.conv_2a = nn.Conv2d(64, 128, 3, 1, padding='same')
+        self.norm_2 = nn.BatchNorm2d(128)
+        self.conv_2b = nn.Conv2d(128, 128, 3, 1, padding='same')
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv_3 = nn.Conv2d(64, 128, 3, 1, padding='same')
+        self.conv_3 = nn.Conv2d(128, 256, 3, 1, padding='same')
 
-        self.conv_3a = nn.ConvTranspose2d(128, 64, 3, 1, padding=1)
-        self.conv_3b = nn.ConvTranspose2d(64, 64, 5, 1, padding=1) #1
-        self.conv_3c = nn.ConvTranspose2d(64, 32, 3, 2, padding=1, output_padding=1) #2
-        self.conv_4a = nn.ConvTranspose2d(32, 32, 5, 1, padding=3) #3
-        self.conv_4b = nn.ConvTranspose2d(32, 1, 3, 2, padding=3, output_padding=1) #1
+        self.conv_3a = nn.ConvTranspose2d(256, 128, 3, 1, padding=1)
+        self.conv_3b = nn.ConvTranspose2d(128, 128, 5, 1, padding=1) #1
+        self.conv_3c = nn.ConvTranspose2d(128, 64, 3, 2, padding=1, output_padding=1) #2
+        self.conv_4a = nn.ConvTranspose2d(64, 64, 5, 1, padding=3) #3
+        self.conv_4b = nn.ConvTranspose2d(64, 34, 3, 2, padding=3, output_padding=1) #1
         self.dropout = nn.Dropout(0.25)
 
     def forward(self, x):
