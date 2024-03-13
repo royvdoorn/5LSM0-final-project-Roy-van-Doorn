@@ -88,7 +88,7 @@ def main(args):
         val_loss_epoch = 0
         for X, Y in train_loader:
             target = (Y*255).long().squeeze(1)
-            target = utils.map_id_to_train_id(target).to(device)
+            target = utils.map_id_to_train_id(target)#.to(device)
             optimizer.zero_grad()
             predictions = model(X)
             loss = criterion(predictions, target)
