@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=18
 #SBATCH --gpus=1
 #SBATCH --partition=gpu
-#SBATCH --time=0:05:00
+#SBATCH --time=2:30:00
 #SBATCH --mem-per-cpu=20G
 
 cd /gpfs/home6/scur0756/Final_Assignment/5LSM0-final-project-Roy-van-Doorn/
