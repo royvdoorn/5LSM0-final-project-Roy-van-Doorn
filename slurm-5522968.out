@@ -1,0 +1,82 @@
+wandb: Currently logged in as: r-v-doorn1 (royvdoorn). Use `wandb login --relogin` to force relogin
+/usr/local/lib/python3.10/dist-packages/torchvision/transforms/v2/_deprecated.py:43: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.
+  warnings.warn(
+Loss of batch at epoch 1 : 3.5691540241241455
+Loss of batch at epoch 1 : 3.523022174835205
+Loss of batch at epoch 1 : 3.5003302097320557
+Loss of batch at epoch 1 : 3.4529032707214355
+Loss of batch at epoch 1 : 3.4420547485351562
+Loss of batch at epoch 1 : 3.410066843032837
+Loss of batch at epoch 1 : 3.3893439769744873
+Loss of batch at epoch 1 : 3.396001100540161
+Loss of batch at epoch 1 : 3.36783766746521
+Loss of batch at epoch 1 : 3.3623340129852295
+Loss of batch at epoch 1 : 3.325688123703003
+Loss of batch at epoch 1 : 3.3448004722595215
+Loss of batch at epoch 1 : 3.312835931777954
+Loss of batch at epoch 1 : 3.291677713394165
+Loss of batch at epoch 1 : 3.30010986328125
+Loss of batch at epoch 1 : 3.2732954025268555
+Loss of batch at epoch 1 : 3.267974853515625
+Loss of batch at epoch 1 : 3.278351068496704
+Loss of batch at epoch 1 : 3.260005235671997
+Loss of batch at epoch 1 : 3.2210896015167236
+Loss of batch at epoch 1 : 3.2328732013702393
+Loss of batch at epoch 1 : 3.2408933639526367
+Loss of batch at epoch 1 : 3.228532075881958
+Loss of batch at epoch 1 : 3.229938268661499
+Loss of batch at epoch 1 : 3.205193519592285
+Loss of batch at epoch 1 : 3.1924703121185303
+Loss of batch at epoch 1 : 3.1939666271209717
+Loss of batch at epoch 1 : 3.200190544128418
+Loss of batch at epoch 1 : 3.1936278343200684
+Loss of batch at epoch 1 : 3.1753056049346924
+Loss of batch at epoch 1 : 3.184384822845459
+Loss of batch at epoch 1 : 3.1681301593780518
+Loss of batch at epoch 1 : 3.1742777824401855
+Loss of batch at epoch 1 : 3.1639087200164795
+Loss of batch at epoch 1 : 3.1498451232910156
+Loss of batch at epoch 1 : 3.137052297592163
+Loss of batch at epoch 1 : 3.1411561965942383
+Loss of batch at epoch 1 : 3.1249403953552246
+Loss of batch at epoch 1 : 3.128767728805542
+Loss of batch at epoch 1 : 3.1304662227630615
+Loss of batch at epoch 1 : 3.13313889503479
+Loss of batch at epoch 1 : 3.0925180912017822
+Loss of batch at epoch 1 : 3.1085574626922607
+Loss of batch at epoch 1 : 3.0885889530181885
+Loss of batch at epoch 1 : 3.1024672985076904
+Loss of batch at epoch 1 : 3.075787305831909
+Loss of batch at epoch 1 : 3.0714755058288574
+Loss of batch at epoch 1 : 3.065429210662842
+Loss of batch at epoch 1 : 3.072610378265381
+Loss of batch at epoch 1 : 3.0626842975616455
+Loss of batch at epoch 1 : 3.042006731033325
+Loss of batch at epoch 1 : 3.0576982498168945
+Loss of batch at epoch 1 : 3.022461414337158
+Loss of batch at epoch 1 : 3.0274202823638916
+Loss of batch at epoch 1 : 3.037322759628296
+Loss of batch at epoch 1 : 3.0191636085510254
+Loss of batch at epoch 1 : 3.0201597213745117
+Loss of batch at epoch 1 : 3.0099525451660156
+Loss of batch at epoch 1 : 2.99174165725708
+Loss of batch at epoch 1 : 3.002267599105835
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 5522968 ON gcn57 CANCELLED AT 2024-03-13T11:26:58 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 5522968.0 ON gcn57 CANCELLED AT 2024-03-13T11:26:58 DUE TO TIME LIMIT ***
+slurmstepd: error: container_p_join: open failed for /slurm/5522968/.ns: No such file or directory
+slurmstepd: error: container_g_join(5522968): No such file or directory
+
+JOB STATISTICS
+==============
+Job ID: 5522968
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:10
+CPU Efficiency: 0.17% of 01:39:00 core-walltime
+Job Wall-clock time: 00:05:30
+Memory Utilized: 4.61 GB
+Memory Efficiency: 1.28% of 360.00 GB
