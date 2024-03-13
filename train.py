@@ -63,10 +63,12 @@ def main(args):
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
 
     # visualize example images
+    '''
     for X, Y in train_dataset:
         transforms.ToPILImage()((X).byte()).save("C:/Users/20192326/Documents/YEAR 1 AIES/Neural networks for computer vision/Assignment/FinalAssignment/Example_input_image.png")
         transforms.ToPILImage()((Y*255).byte()).save("C:/Users/20192326/Documents/YEAR 1 AIES/Neural networks for computer vision/Assignment/FinalAssignment/Example_segmented_image.png")
         break
+    '''
 
     # define model
     model = CNN_autoencoder()#.cuda()
