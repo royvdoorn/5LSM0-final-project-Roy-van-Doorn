@@ -99,7 +99,6 @@ def main(args):
             optimizer.zero_grad()
             predictions = model(X)
             loss = criterion(predictions, target)
-            print(loss)
             loss.backward()
             optimizer.step()
             train_loss_epoch += loss
