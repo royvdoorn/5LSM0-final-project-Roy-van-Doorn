@@ -27,15 +27,22 @@ class DiceLoss(nn.Module):
         self.smooth = smooth
 
     def forward(self, predictions, targets):
+
+        m = torch.nn.Softmax(dim=1)
+        prediction_soft = m(predictions)
+        prediction_max = torch.argmax(prediction_soft, axis=1)
+
         # Ignore index 255
         mask = targets != 255
         targets = targets[mask]
-        predictions = predictions[mask]
+        predictions = prediction_max[mask]
 
         # Flatten label and prediction tensors
         predictions = predictions.view(-1)
         targets = targets.view(-1)
         
+        print(np.shape(predictions))
+        print(np.shape(targets))
         # Determine Dice loss
         intersection = (predictions * targets).sum()                       
         dice = (2.*intersection + self.smooth)/(predictions.sum() + targets.sum() + self.smooth)  
@@ -59,8 +66,8 @@ def main(args):
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
     batch_size = 25
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_worker=8)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True, num_worker=8)
 
     # visualize example images
     '''
@@ -71,10 +78,10 @@ def main(args):
     '''
 
     # define model
-    model = CNN_autoencoder()#.cuda()
+    model = Model().cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
-    criterion = nn.CrossEntropyLoss(ignore_index=255)
+    criterion = torch.nn.CrossEntropyLoss(ignore_index=255)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
@@ -92,6 +99,7 @@ def main(args):
             optimizer.zero_grad()
             predictions = model(X)
             loss = criterion(predictions, target)
+            print(loss)
             loss.backward()
             optimizer.step()
             train_loss_epoch += loss
@@ -114,7 +122,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'CNN_model')
+    torch.save(model.state_dict(), 'Original_model')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -123,16 +131,50 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance of CNN model')
-
-    # visualize prediction of an image
-
+    plt.savefig('Train performance of original model')
 
     pass
 
+def postprocess(prediction, shape):
+    """Post process prediction to mask:
+    Input is the prediction tensor provided by your model, the original image size.
+    Output should be numpy array with size [x,y,n], where x,y are the original size of the image and n is the class label per pixel.
+    We expect n to return the training id as class labels. training id 255 will be ignored during evaluation."""
+    m = torch.nn.Softmax(dim=1)
+    prediction_soft = m(prediction)
+    prediction_max = torch.argmax(prediction_soft, axis=1)
+    prediction = transforms.functional.resize(prediction_max, size=shape, interpolation=transforms.InterpolationMode.NEAREST)
+    return prediction
+
+
+def visualize():
+    model = CNN_autoencoder()
+    model.load_state_dict(torch.load("CNN_model"))
+
+    # define transform
+    regular_transform = transforms.Compose([transforms.Resize((256, 256)),
+                                            transforms.ToTensor(),
+                                            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+    
+    path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
+    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+
+    batch_size = 1
+    train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+    for X, Y in train_loader:
+        prediction = model(X)
+        processed = postprocess(prediction, shape=(256, 256))
+        processed = processed.cpu().detach().numpy()
+        processed = processed.squeeze()
+        plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
+        plt.title('Segmentation')
+        plt.savefig("Segmented_image.png")
+        break
 
 if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
     main(args)
+    #visualize()
