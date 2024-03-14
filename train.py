@@ -78,7 +78,7 @@ def main(args):
     '''
 
     # define model
-    model = Model().cuda()
+    model = Model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255)
