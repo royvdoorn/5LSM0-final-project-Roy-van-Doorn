@@ -14,6 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import utils
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def get_arg_parser():
     parser = ArgumentParser()
@@ -54,6 +55,8 @@ def main(args):
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
+                                            transforms.RandomHorizontalFlip([0.5]),
+                                            transforms.RandomVerticalFlip([0.5]),
                                             transforms.ToTensor(),
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
@@ -65,7 +68,7 @@ def main(args):
     train_size = len(dataset)-val_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    batch_size = 25
+    batch_size = 8
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
 
@@ -81,9 +84,9 @@ def main(args):
     model = Model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
-    criterion = torch.nn.CrossEntropyLoss(ignore_index=255)
+    criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.8)
 
     # training/validation loop
     epochs = 25
@@ -95,7 +98,7 @@ def main(args):
         val_loss_epoch = 0
         for X, Y in train_loader:
             target = (Y*255).long().squeeze(1)
-            target = utils.map_id_to_train_id(target)#.to(device)
+            target = utils.map_id_to_train_id(target).to(device)
             optimizer.zero_grad()
             predictions = model(X)
             loss = criterion(predictions, target)
@@ -147,8 +150,8 @@ def postprocess(prediction, shape):
 
 
 def visualize():
-    model = CNN_autoencoder()
-    model.load_state_dict(torch.load("CNN_model"))
+    model = Model()
+    model.load_state_dict(torch.load("models\\Original_model"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -175,5 +178,5 @@ if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    main(args)
-    #visualize()
+    #main(args)
+    visualize()
