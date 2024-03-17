@@ -100,7 +100,7 @@ def main(args):
             target = (Y*255).long().squeeze(1)
             target = utils.map_id_to_train_id(target).to(device)
             optimizer.zero_grad()
-            predictions = model(X)
+            predictions = model(X).to(device)
             loss = criterion(predictions, target)
             loss.backward()
             optimizer.step()
