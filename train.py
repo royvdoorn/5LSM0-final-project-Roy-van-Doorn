@@ -68,7 +68,7 @@ def main(args):
     train_size = len(dataset)-val_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    batch_size = 8
+    batch_size = 25
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
 
@@ -85,8 +85,8 @@ def main(args):
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.8)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
     epochs = 25
@@ -151,7 +151,7 @@ def postprocess(prediction, shape):
 
 def visualize():
     model = Model()
-    model.load_state_dict(torch.load("models\\Original_model"))
+    model.load_state_dict(torch.load("models\\Original_model_25_epoch"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -171,12 +171,12 @@ def visualize():
         processed = processed.squeeze()
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Segmented_image.png")
+        plt.savefig("Images\\Segmented_image_original_model_data_aug.png")
         break
 
 if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    main(args)
-    #visualize()
+    #main(args)
+    visualize()
