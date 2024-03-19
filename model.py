@@ -130,13 +130,19 @@ class CNN_autoencoder(nn.Module):
 
     def forward(self, x):
         x = self.norm_1(function.relu(self.conv_1a(x)))
-        x = self.dropout(self.pool(self.norm_1(function.relu(self.conv_1b(x)))))
-        x = self.norm_2(function.relu(self.conv_2a(x)))
-        x = self.dropout(self.pool(self.norm_2(function.relu(self.conv_2b(x)))))
-        x = function.relu(self.conv_3(x))
+        x1 = self.dropout(self.pool(self.norm_1(function.relu(self.conv_1b(x)))))
+
+        x = self.norm_2(function.relu(self.conv_2a(x1)))
+        x2 = self.dropout(self.pool(self.norm_2(function.relu(self.conv_2b(x)))))
+
+        x = function.relu(self.conv_3(x2))
         x = function.relu(self.conv_3a(x))
+
+        x = torch.cat([x, x2], axis=1)
         x = self.norm_2(function.relu(self.conv_3b(x)))
         x = self.dropout(self.norm_1(function.relu(self.conv_3c(x))))
+
+        x = torch.cat([x, x1], axis=1)
         x = self.norm_1(function.relu(self.conv_4a(x)))
         x = self.dropout(function.sigmoid(self.conv_4b(x)))
         return x
