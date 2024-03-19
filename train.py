@@ -8,7 +8,7 @@ from argparse import ArgumentParser
 from torch.utils.data import DataLoader, random_split
 import torch.nn as nn
 import torch
-from model import Model, CNN_autoencoder
+from model import Model, Efficiency_model
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -81,7 +81,7 @@ def main(args):
     '''
 
     # define model
-    model = Model()#.cuda()
+    model = Efficiency_model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
