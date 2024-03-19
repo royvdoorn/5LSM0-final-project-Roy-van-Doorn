@@ -17,3 +17,82 @@ Loss of batch at epoch 1 : 2.8983218669891357
 Loss of batch at epoch 1 : 2.8545491695404053
 Loss of batch at epoch 1 : 2.806837797164917
 Loss of batch at epoch 1 : 2.753342628479004
+Loss of batch at epoch 1 : 2.6921446323394775
+Loss of batch at epoch 1 : 2.7342374324798584
+Loss of batch at epoch 1 : 2.6393537521362305
+Loss of batch at epoch 1 : 2.6426422595977783
+Loss of batch at epoch 1 : 2.5724451541900635
+Loss of batch at epoch 1 : 2.5736570358276367
+Loss of batch at epoch 1 : 2.510240077972412
+Loss of batch at epoch 1 : 2.5065150260925293
+Loss of batch at epoch 1 : 2.4757845401763916
+Loss of batch at epoch 1 : 2.432241916656494
+Loss of batch at epoch 1 : 2.405097246170044
+Loss of batch at epoch 1 : 2.3892226219177246
+Loss of batch at epoch 1 : 2.373779535293579
+Loss of batch at epoch 1 : 2.4306375980377197
+Loss of batch at epoch 1 : 2.420994997024536
+Loss of batch at epoch 1 : 2.3537750244140625
+Loss of batch at epoch 1 : 2.338909149169922
+Loss of batch at epoch 1 : 2.3072264194488525
+Loss of batch at epoch 1 : 2.320358991622925
+Loss of batch at epoch 1 : 2.330960512161255
+Loss of batch at epoch 1 : 2.2622697353363037
+Loss of batch at epoch 1 : 2.2561933994293213
+Loss of batch at epoch 1 : 2.2140135765075684
+Loss of batch at epoch 1 : 2.205209732055664
+Loss of batch at epoch 1 : 2.1911215782165527
+Loss of batch at epoch 1 : 2.2041964530944824
+Loss of batch at epoch 1 : 2.1672208309173584
+Loss of batch at epoch 1 : 2.199575185775757
+Loss of batch at epoch 1 : 2.1627414226531982
+Loss of batch at epoch 1 : 2.141392946243286
+Loss of batch at epoch 1 : 2.1147055625915527
+Loss of batch at epoch 1 : 2.1452903747558594
+Loss of batch at epoch 1 : 2.082509756088257
+Loss of batch at epoch 1 : 2.066150188446045
+Loss of batch at epoch 1 : 2.128844976425171
+Loss of batch at epoch 1 : 2.0633010864257812
+Loss of batch at epoch 1 : 2.076063871383667
+Loss of batch at epoch 1 : 2.1086506843566895
+Average train loss of epoch 1: 0.05160881424235087
+Average validation loss of epoch 1: 0.041477392819594054
+Loss of batch at epoch 2 : 2.030663251876831
+Loss of batch at epoch 2 : 2.010101556777954
+Loss of batch at epoch 2 : 2.0255932807922363
+Loss of batch at epoch 2 : 2.0073275566101074
+Loss of batch at epoch 2 : 1.9556336402893066
+Loss of batch at epoch 2 : 1.9743332862854004
+Loss of batch at epoch 2 : 1.978143334388733
+Loss of batch at epoch 2 : 2.019068717956543
+Loss of batch at epoch 2 : 1.9790518283843994
+Loss of batch at epoch 2 : 1.9720815420150757
+Loss of batch at epoch 2 : 1.9390848875045776
+Loss of batch at epoch 2 : 1.968727469444275
+Loss of batch at epoch 2 : 1.9086809158325195
+Loss of batch at epoch 2 : 1.953323245048523
+Loss of batch at epoch 2 : 1.9422084093093872
+Loss of batch at epoch 2 : 1.9139807224273682
+Loss of batch at epoch 2 : 1.9381202459335327
+Loss of batch at epoch 2 : 1.926781177520752
+Loss of batch at epoch 2 : 1.8925485610961914
+Loss of batch at epoch 2 : 1.9007508754730225
+Loss of batch at epoch 2 : 1.9096457958221436
+Loss of batch at epoch 2 : 1.8728610277175903
+slurmstepd: error: *** JOB 5603129 ON gcn39 CANCELLED AT 2024-03-19T16:46:17 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 5603129.0 ON gcn39 CANCELLED AT 2024-03-19T16:46:17 DUE TO TIME LIMIT ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+
+JOB STATISTICS
+==============
+Job ID: 5603129
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:10
+CPU Efficiency: 0.03% of 09:09:00 core-walltime
+Job Wall-clock time: 00:30:30
+Memory Utilized: 77.13 GB
+Memory Efficiency: 21.43% of 360.00 GB
