@@ -8,7 +8,7 @@ from argparse import ArgumentParser
 from torch.utils.data import DataLoader, random_split
 import torch.nn as nn
 import torch
-from model import Model, CNN_autoencoder
+from model import Model, Efficiency_model
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -61,14 +61,14 @@ def main(args):
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     # data loading
-    #path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
+    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
     validation_ratio = 0.1
     val_size = int(validation_ratio*len(dataset))
     train_size = len(dataset)-val_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    batch_size = 50
+    batch_size = 1
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
 
@@ -81,7 +81,7 @@ def main(args):
     '''
 
     # define model
-    model = Model()#.cuda()
+    model = Efficiency_model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
@@ -158,10 +158,10 @@ def visualize():
                                             transforms.ToTensor(),
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
     
-    path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    #path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
+    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
 
-    batch_size = 1
+    batch_size = 50
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     for X, Y in train_loader:
@@ -179,4 +179,10 @@ if __name__ == "__main__":
     parser = get_arg_parser()
     args = parser.parse_args()
     main(args)
-    #visualize()
+
+    """
+    visualize()
+    model = Model()
+    params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(params)
+    """

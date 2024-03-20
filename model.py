@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as function
+import numpy as np
 
 """ segmentation model example
 """
@@ -109,40 +110,66 @@ class decoder_block(nn.Module):
         return x
 
 
-class CNN_autoencoder(nn.Module):
+class Efficiency_model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv_1a = nn.Conv2d(3, 64, 3, 1, padding='same')
+        self.conv_1a = nn.Conv2d(3, 64, kernel_size=3, padding=1)
         self.norm_1 = nn.BatchNorm2d(64)
-        self.conv_1b = nn.Conv2d(64, 64, 3, 1, padding='same')
-        self.conv_2a = nn.Conv2d(64, 128, 3, 1, padding='same')
-        self.norm_2 = nn.BatchNorm2d(128)
-        self.conv_2b = nn.Conv2d(128, 128, 3, 1, padding='same')
-        self.pool = nn.MaxPool2d(2, 2)
-        self.conv_3 = nn.Conv2d(128, 256, 3, 1, padding='same')
+        self.conv_1b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
 
-        self.conv_3a = nn.ConvTranspose2d(256, 128, 3, 1, padding=1)
-        self.conv_3b = nn.ConvTranspose2d(128, 128, 5, 1, padding=1) #1
-        self.conv_3c = nn.ConvTranspose2d(128, 64, 3, 2, padding=1, output_padding=1) #2
-        self.conv_4a = nn.ConvTranspose2d(64, 64, 5, 1, padding=3) #3
-        self.conv_4b = nn.ConvTranspose2d(64, 34, 3, 2, padding=3, output_padding=1) #1
+        self.conv_2a = nn.Conv2d(64, 128, kernel_size=3, padding=1)
+        self.norm_2 = nn.BatchNorm2d(128)
+        self.conv_2b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
+
+        self.pool = nn.MaxPool2d((2, 2))
+        
+        self.conv_latent_a = nn.Conv2d(128, 256, kernel_size=3, padding=1)
+        self.conv_latent_b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+
+        self.up_1 = nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2, padding=0)
+        self.conv_3a = nn.Conv2d(256, 128, kernel_size=3, padding=1)
+        self.conv_3b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
+
+        self.up_2 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2, padding=0)
+        self.conv_4a = nn.Conv2d(128, 64, kernel_size=3, padding=1)
+        self.conv_4b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
+
+        self.out = nn.Conv2d(64, 34, kernel_size=1, padding=0)
+
         self.dropout = nn.Dropout(0.25)
 
     def forward(self, x):
+        # Encode
         x = self.norm_1(function.relu(self.conv_1a(x)))
-        x1 = self.dropout(self.pool(self.norm_1(function.relu(self.conv_1b(x)))))
+        x = self.norm_1(function.relu(self.conv_1b(x)))
+        x1 = self.norm_1(function.relu(self.conv_1b(x)))
+        x = self.dropout(self.pool(x1))
 
-        x = self.norm_2(function.relu(self.conv_2a(x1)))
-        x2 = self.dropout(self.pool(self.norm_2(function.relu(self.conv_2b(x)))))
+        # Encode
+        x = self.norm_2(function.relu(self.conv_2a(x)))
+        x = self.norm_2(function.relu(self.conv_2b(x)))
+        x2 = self.norm_2(function.relu(self.conv_2b(x)))
+        x = self.dropout(self.pool(x2))
 
-        x = function.relu(self.conv_3(x2))
-        x = function.relu(self.conv_3a(x))
+        # Latent
+        x = function.relu(self.conv_latent_a(x))
+        x = function.relu(self.conv_latent_b(x))
 
-        x = torch.cat([x, x2], axis=1)
+        # Decode
+        x = self.up_1(x)
+        x = torch.cat([x, x2], dim=1)
+        x = self.norm_2(function.relu(self.conv_3a(x)))
         x = self.norm_2(function.relu(self.conv_3b(x)))
-        x = self.dropout(self.norm_1(function.relu(self.conv_3c(x))))
+        x = self.dropout(self.norm_2(function.relu(self.conv_3b(x))))
 
-        x = torch.cat([x, x1], axis=1)
+        # Decode
+        x = self.up_2(x)
+        x = torch.cat([x, x1], dim=1)
         x = self.norm_1(function.relu(self.conv_4a(x)))
-        x = self.dropout(function.sigmoid(self.conv_4b(x)))
+        x = self.norm_1(function.relu(self.conv_4b(x)))
+        x = self.dropout(self.norm_1(function.relu(self.conv_4b(x))))
+
+        # Out
+        x = self.out(x)
+
         return x
