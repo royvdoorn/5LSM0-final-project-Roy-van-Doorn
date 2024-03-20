@@ -68,7 +68,7 @@ def main(args):
     train_size = len(dataset)-val_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    batch_size = 1
+    batch_size = 50
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
 
@@ -124,7 +124,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'Original_model_data_aug')
+    torch.save(model.state_dict(), 'efficiency_model_data_aug')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -133,7 +133,7 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance of original model')
+    plt.savefig('Train performance of efficiency model')
 
     pass
 
