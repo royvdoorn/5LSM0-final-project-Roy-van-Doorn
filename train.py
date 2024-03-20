@@ -81,7 +81,7 @@ def main(args):
     '''
 
     # define model
-    model = Efficiency_model()#.cuda()
+    model = Model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
@@ -89,7 +89,7 @@ def main(args):
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
-    epochs = 20
+    epochs = 25
 
     train_loss = []
     val_loss = []
@@ -124,7 +124,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'efficiency_model_data_aug')
+    torch.save(model.state_dict(), 'original_model_data_aug')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -133,7 +133,7 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance of efficiency model')
+    plt.savefig('Train performance of original model')
 
     pass
 
@@ -150,18 +150,18 @@ def postprocess(prediction, shape):
 
 
 def visualize():
-    model = Model()
-    model.load_state_dict(torch.load("models\\Original_model_25_epoch"))
+    model = Efficiency_model()
+    model.load_state_dict(torch.load("models\\efficiency_model_data_aug"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
                                             transforms.ToTensor(),
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
     
-    #path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
+    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
 
-    batch_size = 50
+    batch_size = 1
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     for X, Y in train_loader:
@@ -171,17 +171,18 @@ def visualize():
         processed = processed.squeeze()
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Images\\Segmented_image_original_model_data_aug.png")
+        plt.savefig("Images\\segmented image efficiency model.png")
         break
 
 if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    main(args)
+    #main(args)
 
-    """
+    
     visualize()
+    """
     model = Model()
     params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(params)
