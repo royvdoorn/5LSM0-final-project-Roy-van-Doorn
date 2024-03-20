@@ -62,7 +62,7 @@ def main(args):
 
     # data loading
     path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
     validation_ratio = 0.1
     val_size = int(validation_ratio*len(dataset))
     train_size = len(dataset)-val_size
