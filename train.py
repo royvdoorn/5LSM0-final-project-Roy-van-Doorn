@@ -58,8 +58,7 @@ def main(args):
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
-                                            transforms.RandomHorizontalFlip(p=0.5),
-                                            transforms.RandomVerticalFlip(p=0.5),
+                                            transforms.RandomVerticalFlip(p=0.25),
                                             transforms.ToTensor(),
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
@@ -84,15 +83,15 @@ def main(args):
     '''
 
     # define model
-    model = Model()#.cuda()
+    model = Efficiency_model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
-    criterion = DiceLoss()#torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
+    criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
-    epochs = 2
+    epochs = 10
 
     train_loss = []
     val_loss = []
@@ -127,7 +126,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'original_model_data_aug_dice')
+    torch.save(model.state_dict(), 'efficiency_model_data_aug')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -136,7 +135,7 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance of original model dice loss')
+    plt.savefig('Train performance of efficiency model')
 
     pass
 
@@ -151,10 +150,14 @@ def postprocess(prediction, shape):
     prediction = transforms.functional.resize(prediction_max, size=shape, interpolation=transforms.InterpolationMode.NEAREST)
     return prediction
 
+def postprocess_dice(prediction, shape):
+    prediction = prediction*18
+    prediction = prediction.int()
+    return prediction
 
 def visualize():
-    model = Efficiency_model()
-    model.load_state_dict(torch.load("models\\efficiency_model_data_aug"))
+    model = Model()
+    model.load_state_dict(torch.load("models\\original_model_data_aug_dice"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -169,12 +172,12 @@ def visualize():
 
     for X, Y in train_loader:
         prediction = model(X)
-        processed = postprocess(prediction, shape=(256, 256))
+        processed = postprocess_dice(prediction, shape=(256, 256))
         processed = processed.cpu().detach().numpy()
         processed = processed.squeeze()
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Images\\segmented image efficiency model.png")
+        plt.savefig("Images\\segmented image original model dice.png")
         break
 
 if __name__ == "__main__":

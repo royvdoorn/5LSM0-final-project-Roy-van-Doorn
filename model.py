@@ -120,20 +120,20 @@ class Efficiency_model(nn.Module):
         self.norm_1 = nn.BatchNorm2d(64)
         self.conv_1b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
 
-        self.conv_2a = nn.Conv2d(64, 128, kernel_size=3, padding=1)
-        self.norm_2 = nn.BatchNorm2d(128)
-        self.conv_2b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
+        self.conv_2a = nn.Conv2d(64, 256, kernel_size=3, padding=1)
+        self.norm_2 = nn.BatchNorm2d(256)
+        self.conv_2b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
 
         self.pool = nn.MaxPool2d((2, 2))
         
-        self.conv_latent_a = nn.Conv2d(128, 256, kernel_size=3, padding=1)
-        self.conv_latent_b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+        self.conv_latent_a = nn.Conv2d(256, 1024, kernel_size=3, padding=1)
+        self.conv_latent_b = nn.Conv2d(1024, 1024, kernel_size=3, padding=1)
 
-        self.up_1 = nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2, padding=0)
-        self.conv_3a = nn.Conv2d(256, 128, kernel_size=3, padding=1)
-        self.conv_3b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
+        self.up_1 = nn.ConvTranspose2d(1024, 256, kernel_size=2, stride=2, padding=0)
+        self.conv_3a = nn.Conv2d(512, 256, kernel_size=3, padding=1)
+        self.conv_3b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
 
-        self.up_2 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2, padding=0)
+        self.up_2 = nn.ConvTranspose2d(256, 64, kernel_size=2, stride=2, padding=0)
         self.conv_4a = nn.Conv2d(128, 64, kernel_size=3, padding=1)
         self.conv_4b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
 
