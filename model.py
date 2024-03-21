@@ -26,9 +26,7 @@ class Model(nn.Module):
         self.d4 = decoder_block(128, 64)
 
         """ Classifier """
-        self.outputs1 = nn.Conv2d(64, 32, kernel_size=1, padding=0)
-        self.outputs2 = nn.Conv2d(32, 1, kernel_size=1, padding=0)
-        self.sigmoid = nn.Sigmoid()
+        self.outputs = nn.Conv2d(64, 18, kernel_size=1, padding=0)
 
     def forward(self, inputs):
         """ Encoder """
@@ -47,10 +45,8 @@ class Model(nn.Module):
         d4 = self.d4(d3, s1)
 
         """ Segmentation output """
-        outputs1 = self.outputs1(d4)
-        outputs2 = self.outputs2(outputs1)
-
-        return self.sigmoid(outputs2)
+        outputs = self.outputs(d4)
+        return outputs
 
 
 class conv_block(nn.Module):
@@ -60,8 +56,8 @@ class conv_block(nn.Module):
         self.conv1 = nn.Conv2d(in_c, out_c, kernel_size=3, padding=1)
         self.bn1 = nn.BatchNorm2d(out_c)
 
-        self.conv2 = nn.Conv2d(out_c, out_c, kernel_size=3, padding=1)
-        self.bn2 = nn.BatchNorm2d(out_c)
+        #self.conv2 = nn.Conv2d(out_c, out_c, kernel_size=3, padding=1)
+        #self.bn2 = nn.BatchNorm2d(out_c)
 
         self.relu = nn.ReLU()
 
@@ -70,9 +66,9 @@ class conv_block(nn.Module):
         x = self.bn1(x)
         x = self.relu(x)
 
-        x = self.conv2(x)
-        x = self.bn2(x)
-        x = self.relu(x)
+        #x = self.conv2(x)
+        #x = self.bn2(x)
+        #x = self.relu(x)
 
         return x
 

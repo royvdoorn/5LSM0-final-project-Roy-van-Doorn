@@ -83,7 +83,7 @@ def main(args):
     '''
 
     # define model
-    model = Efficiency_model()#.cuda()
+    model = Model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
@@ -91,7 +91,7 @@ def main(args):
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
-    epochs = 5
+    epochs = 2
 
     train_loss = []
     val_loss = []
@@ -156,8 +156,8 @@ def postprocess_dice(prediction, shape):
     return prediction
 
 def visualize():
-    model = Model()
-    model.load_state_dict(torch.load("models\\original_model_data_aug_dice"))
+    model = Efficiency_model()
+    model.load_state_dict(torch.load("models\\efficiency_model_data_aug"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -172,12 +172,12 @@ def visualize():
 
     for X, Y in train_loader:
         prediction = model(X)
-        processed = postprocess_dice(prediction, shape=(256, 256))
+        processed = postprocess(prediction, shape=(256, 256))
         processed = processed.cpu().detach().numpy()
         processed = processed.squeeze()
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Images\\segmented image original model dice.png")
+        plt.savefig("Images\\segmented image efficiency model.png")
         break
 
 if __name__ == "__main__":
@@ -188,8 +188,8 @@ if __name__ == "__main__":
 
     
     #visualize()
-    """
-    model = Model()
-    params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(params)
-    """
+    
+    #model = Model()
+    #params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    #print(params)
+    
