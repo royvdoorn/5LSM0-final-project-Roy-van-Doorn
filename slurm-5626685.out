@@ -1,0 +1,16 @@
+wandb: Currently logged in as: r-v-doorn1 (royvdoorn). Use `wandb login --relogin` to force relogin
+/usr/local/lib/python3.10/dist-packages/torchvision/transforms/v2/_deprecated.py:43: UserWarning: The transform `ToTensor()` is deprecated and will be removed in a future release. Instead, please use `v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])`.
+  warnings.warn(
+Loss of batch at epoch 1 : 0.7127556204795837
+Loss of batch at epoch 1 : 0.711575984954834
+Loss of batch at epoch 1 : 0.6876294016838074
+Loss of batch at epoch 1 : 0.6711292266845703
+Loss of batch at epoch 1 : 0.6855696439743042
+Loss of batch at epoch 1 : 0.6786978244781494
+Loss of batch at epoch 1 : 0.6647950410842896
+Loss of batch at epoch 1 : 0.6513158679008484
+Loss of batch at epoch 1 : 0.6599969863891602
+Loss of batch at epoch 1 : 0.6669639348983765
+Loss of batch at epoch 1 : 0.6542743444442749
+Loss of batch at epoch 1 : 0.6494266986846924
+Loss of batch at epoch 1 : 0.6420660018920898
