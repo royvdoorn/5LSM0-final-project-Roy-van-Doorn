@@ -68,3 +68,62 @@ Loss of batch at epoch 2 : 0.5616284608840942
 Loss of batch at epoch 2 : 0.5581148862838745
 Loss of batch at epoch 2 : 0.5473371744155884
 Loss of batch at epoch 2 : 0.5466210842132568
+Loss of batch at epoch 2 : 0.5886422991752625
+Loss of batch at epoch 2 : 0.575306236743927
+Loss of batch at epoch 2 : 0.574519157409668
+Loss of batch at epoch 2 : 0.5443866848945618
+Loss of batch at epoch 2 : 0.5514928102493286
+Loss of batch at epoch 2 : 0.5318209528923035
+Loss of batch at epoch 2 : 0.5466322302818298
+Loss of batch at epoch 2 : 0.5390164852142334
+Loss of batch at epoch 2 : 0.5481550097465515
+Loss of batch at epoch 2 : 0.541396975517273
+Loss of batch at epoch 2 : 0.5579571723937988
+Loss of batch at epoch 2 : 0.5316982269287109
+Loss of batch at epoch 2 : 0.5386055111885071
+Loss of batch at epoch 2 : 0.5511529445648193
+Loss of batch at epoch 2 : 0.54363614320755
+Loss of batch at epoch 2 : 0.529604434967041
+Loss of batch at epoch 2 : 0.5571761131286621
+Loss of batch at epoch 2 : 0.5165570974349976
+Loss of batch at epoch 2 : 0.5256600379943848
+Loss of batch at epoch 2 : 0.5145943760871887
+Loss of batch at epoch 2 : 0.5307172536849976
+Loss of batch at epoch 2 : 0.5312016606330872
+Loss of batch at epoch 2 : 0.551284909248352
+Loss of batch at epoch 2 : 0.5301348567008972
+Loss of batch at epoch 2 : 0.517027735710144
+Loss of batch at epoch 2 : 0.5158872604370117
+Loss of batch at epoch 2 : 0.5253382921218872
+Loss of batch at epoch 2 : 0.5463669896125793
+Loss of batch at epoch 2 : 0.5326396226882935
+Loss of batch at epoch 2 : 0.5066952109336853
+Loss of batch at epoch 2 : 0.5524819493293762
+Loss of batch at epoch 2 : 0.5118231773376465
+Loss of batch at epoch 2 : 0.5162544250488281
+Loss of batch at epoch 2 : 0.5234923958778381
+Loss of batch at epoch 2 : 0.5274409651756287
+Loss of batch at epoch 2 : 0.5328793525695801
+Loss of batch at epoch 2 : 0.5400024652481079
+Loss of batch at epoch 2 : 0.5290229320526123
+Loss of batch at epoch 2 : 0.5183124542236328
+Loss of batch at epoch 2 : 0.5249614715576172
+Loss of batch at epoch 2 : 0.5169525146484375
+Loss of batch at epoch 2 : 0.5306884050369263
+Loss of batch at epoch 2 : 0.5458656549453735
+Average train loss of epoch 2: 0.01092441763959775
+Average validation loss of epoch 2: 0.01056703573926932
+
+JOB STATISTICS
+==============
+Job ID: 5626685
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 07:35:21
+CPU Efficiency: 61.28% of 12:23:06 core-walltime
+Job Wall-clock time: 00:41:17
+Memory Utilized: 86.89 GB
+Memory Efficiency: 24.14% of 360.00 GB
