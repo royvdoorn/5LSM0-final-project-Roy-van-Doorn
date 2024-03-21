@@ -26,7 +26,9 @@ class Model(nn.Module):
         self.d4 = decoder_block(128, 64)
 
         """ Classifier """
-        self.outputs = nn.Conv2d(64, 34, kernel_size=1, padding=0)
+        self.outputs1 = nn.Conv2d(64, 32, kernel_size=1, padding=0)
+        self.outputs2 = nn.Conv2d(32, 1, kernel_size=1, padding=0)
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, inputs):
         """ Encoder """
@@ -45,9 +47,10 @@ class Model(nn.Module):
         d4 = self.d4(d3, s1)
 
         """ Segmentation output """
-        outputs = self.outputs(d4)
+        outputs1 = self.outputs1(d4)
+        outputs2 = self.outputs2(outputs1)
 
-        return outputs
+        return self.sigmoid(outputs2)
 
 
 class conv_block(nn.Module):

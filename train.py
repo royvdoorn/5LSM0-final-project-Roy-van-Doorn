@@ -28,22 +28,25 @@ class DiceLoss(nn.Module):
         self.smooth = smooth
 
     def forward(self, predictions, targets):
-
+        """
         m = torch.nn.Softmax(dim=1)
         prediction_soft = m(predictions)
-        prediction_max = torch.argmax(prediction_soft, axis=1)
-
+        prediction_max = torch.nn.functional.gumbel_softmax(prediction_soft, tau=1, hard=True, dim=1)
+        print(prediction_max.unique())
+        print(np.shape(prediction_max))
+        print(targets.unique())
+        """
         # Ignore index 255
         mask = targets != 255
         targets = targets[mask]
-        predictions = prediction_max[mask]
+        predictions = predictions.squeeze(1)
+        predictions = predictions[mask]
 
         # Flatten label and prediction tensors
         predictions = predictions.view(-1)
+        targets = targets/18
         targets = targets.view(-1)
         
-        print(np.shape(predictions))
-        print(np.shape(targets))
         # Determine Dice loss
         intersection = (predictions * targets).sum()                       
         dice = (2.*intersection + self.smooth)/(predictions.sum() + targets.sum() + self.smooth)  
@@ -84,12 +87,12 @@ def main(args):
     model = Model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
-    criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
+    criterion = DiceLoss()#torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
-    epochs = 25
+    epochs = 5
 
     train_loss = []
     val_loss = []
@@ -124,7 +127,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'original_model_data_aug')
+    torch.save(model.state_dict(), 'original_model_data_aug_dice')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -133,7 +136,7 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance of original model')
+    plt.savefig('Train performance of original model dice loss')
 
     pass
 
