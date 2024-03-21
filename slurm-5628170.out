@@ -270,3 +270,28 @@ Loss of batch at epoch 5 : 1.1309906244277954
 Loss of batch at epoch 5 : 1.0767440795898438
 Loss of batch at epoch 5 : 1.1691608428955078
 Loss of batch at epoch 5 : 1.1040149927139282
+Loss of batch at epoch 5 : 1.064202070236206
+Loss of batch at epoch 5 : 1.116676926612854
+Loss of batch at epoch 5 : 1.1357688903808594
+Loss of batch at epoch 5 : 1.123745322227478
+Loss of batch at epoch 5 : 1.1379982233047485
+Loss of batch at epoch 5 : 1.158893346786499
+Loss of batch at epoch 5 : 1.0576332807540894
+Loss of batch at epoch 5 : 1.0805412530899048
+Loss of batch at epoch 5 : 1.0427030324935913
+Average train loss of epoch 5: 0.02285699367167079
+Average validation loss of epoch 5: 0.022371243948888297
+
+JOB STATISTICS
+==============
+Job ID: 5628170
+Cluster: snellius
+User/Group: scur0756/scur0756
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 1-17:21:01
+CPU Efficiency: 81.71% of 2-02:36:18 core-walltime
+Job Wall-clock time: 02:48:41
+Memory Utilized: 163.16 GB
+Memory Efficiency: 45.32% of 360.00 GB
