@@ -26,7 +26,7 @@ class Model(nn.Module):
         self.d4 = decoder_block(128, 64)
 
         """ Classifier """
-        self.outputs = nn.Conv2d(64, 18, kernel_size=1, padding=0)
+        self.outputs = nn.Conv2d(64, 19, kernel_size=1, padding=0)
 
     def forward(self, inputs):
         """ Encoder """
@@ -112,43 +112,53 @@ class decoder_block(nn.Module):
 class Efficiency_model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv_1a = nn.Conv2d(3, 64, kernel_size=3, padding=1)
+        self.enc_1a = nn.Conv2d(3, 64, kernel_size=3, padding=1)
         self.norm_1 = nn.BatchNorm2d(64)
-        self.conv_1b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
+        self.enc_1b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
 
-        self.conv_2a = nn.Conv2d(64, 256, kernel_size=3, padding=1)
-        self.norm_2 = nn.BatchNorm2d(256)
-        self.conv_2b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+        self.enc_2a = nn.Conv2d(64, 128, kernel_size=3, padding=1)
+        self.norm_2 = nn.BatchNorm2d(128)
+        self.enc_2b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
 
-        self.pool = nn.MaxPool2d((2, 2))
+        self.enc_3a = nn.Conv2d(128, 256, kernel_size=3, padding=1)
+        self.norm_3 = nn.BatchNorm2d(256)
+        self.enc_3b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
         
-        self.conv_latent_a = nn.Conv2d(256, 1024, kernel_size=3, padding=1)
-        self.conv_latent_b = nn.Conv2d(1024, 1024, kernel_size=3, padding=1)
+        self.conv_latent_a = nn.Conv2d(256, 512, kernel_size=3, padding=1)
+        self.conv_latent_b = nn.Conv2d(512, 512, kernel_size=3, padding=1)
 
-        self.up_1 = nn.ConvTranspose2d(1024, 256, kernel_size=2, stride=2, padding=0)
-        self.conv_3a = nn.Conv2d(512, 256, kernel_size=3, padding=1)
-        self.conv_3b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+        self.up_1 = nn.ConvTranspose2d(512, 256, kernel_size=3, stride=3, padding=0)
+        self.dec_1a = nn.Conv2d(512, 256, kernel_size=3, padding=1)
+        self.dec_1b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
 
-        self.up_2 = nn.ConvTranspose2d(256, 64, kernel_size=2, stride=2, padding=0)
-        self.conv_4a = nn.Conv2d(128, 64, kernel_size=3, padding=1)
-        self.conv_4b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
+        self.up_2 = nn.ConvTranspose2d(256, 128, kernel_size=3, stride=3, padding=0)
+        self.dec_2a = nn.Conv2d(256, 128, kernel_size=3, padding=1)
+        self.dec_2b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
 
-        self.out = nn.Conv2d(64, 34, kernel_size=1, padding=0)
+        self.up_3 = nn.ConvTranspose2d(128, 64, kernel_size=3, stride=3, padding=0)
+        self.dec_3a = nn.Conv2d(128, 64, kernel_size=3, padding=1)
+        self.dec_3b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
 
+        self.out = nn.Conv2d(64, 19, kernel_size=1, padding=0)
+
+        self.pool = nn.MaxPool2d((3, 3))
         self.dropout = nn.Dropout(0.25)
 
     def forward(self, x):
         # Encode
-        x = self.norm_1(function.relu(self.conv_1a(x)))
-        x = self.norm_1(function.relu(self.conv_1b(x)))
-        x1 = self.norm_1(function.relu(self.conv_1b(x)))
+        x = self.norm_1(function.relu(self.enc_1a(x)))
+        x1 = self.norm_1(function.relu(self.enc_1b(x)))
         x = self.dropout(self.pool(x1))
 
         # Encode
-        x = self.norm_2(function.relu(self.conv_2a(x)))
-        x = self.norm_2(function.relu(self.conv_2b(x)))
-        x2 = self.norm_2(function.relu(self.conv_2b(x)))
+        x = self.norm_2(function.relu(self.enc_2a(x)))
+        x2 = self.norm_2(function.relu(self.enc_2b(x)))
         x = self.dropout(self.pool(x2))
+
+        # Encode
+        x = self.norm_3(function.relu(self.enc_3a(x)))
+        x3 = self.norm_3(function.relu(self.enc_3b(x)))
+        x = self.dropout(self.pool(x3))
 
         # Latent
         x = function.relu(self.conv_latent_a(x))
@@ -156,17 +166,21 @@ class Efficiency_model(nn.Module):
 
         # Decode
         x = self.up_1(x)
-        x = torch.cat([x, x2], dim=1)
-        x = self.norm_2(function.relu(self.conv_3a(x)))
-        x = self.norm_2(function.relu(self.conv_3b(x)))
-        x = self.dropout(self.norm_2(function.relu(self.conv_3b(x))))
+        x = torch.cat([x, x3], dim=1)
+        x = self.norm_3(function.relu(self.dec_1a(x)))
+        x = self.dropout(self.norm_3(function.relu(self.dec_1b(x))))
 
         # Decode
         x = self.up_2(x)
+        x = torch.cat([x, x2], dim=1)
+        x = self.norm_2(function.relu(self.dec_2a(x)))
+        x = self.dropout(self.norm_2(function.relu(self.dec_2b(x))))
+
+        # Decode
+        x = self.up_3(x)
         x = torch.cat([x, x1], dim=1)
-        x = self.norm_1(function.relu(self.conv_4a(x)))
-        x = self.norm_1(function.relu(self.conv_4b(x)))
-        x = self.dropout(self.norm_1(function.relu(self.conv_4b(x))))
+        x = self.norm_1(function.relu(self.dec_3a(x)))
+        x = self.dropout(self.norm_1(function.relu(self.dec_3b(x))))
 
         # Out
         x = self.out(x)
