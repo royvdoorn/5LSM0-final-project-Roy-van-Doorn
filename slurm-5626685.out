@@ -54,3 +54,17 @@ Loss of batch at epoch 1 : 0.5771396160125732
 Loss of batch at epoch 1 : 0.5718379020690918
 Loss of batch at epoch 1 : 0.5694386959075928
 Loss of batch at epoch 1 : 0.5760931372642517
+Loss of batch at epoch 1 : 0.5678328275680542
+Average train loss of epoch 1: 0.012435254986558592
+Average validation loss of epoch 1: 0.011552288074686069
+Loss of batch at epoch 2 : 0.5860214233398438
+Loss of batch at epoch 2 : 0.5771588087081909
+Loss of batch at epoch 2 : 0.5444004535675049
+Loss of batch at epoch 2 : 0.5735025405883789
+Loss of batch at epoch 2 : 0.5574314594268799
+Loss of batch at epoch 2 : 0.5724865198135376
+Loss of batch at epoch 2 : 0.5653977394104004
+Loss of batch at epoch 2 : 0.5616284608840942
+Loss of batch at epoch 2 : 0.5581148862838745
+Loss of batch at epoch 2 : 0.5473371744155884
+Loss of batch at epoch 2 : 0.5466210842132568
