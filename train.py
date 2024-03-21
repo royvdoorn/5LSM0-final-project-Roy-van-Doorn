@@ -178,10 +178,10 @@ if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    #main(args)
+    main(args)
 
     
-    visualize()
+    #visualize()
     """
     model = Model()
     params = sum(p.numel() for p in model.parameters() if p.requires_grad)
