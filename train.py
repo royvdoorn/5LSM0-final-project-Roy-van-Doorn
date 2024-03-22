@@ -83,7 +83,7 @@ def main(args):
     '''
 
     # define model
-    model = Efficiency_model()#.cuda()
+    model = Model()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
@@ -126,7 +126,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'efficiency_model_data_aug')
+    torch.save(model.state_dict(), 'extended_u_net')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -135,7 +135,7 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance of efficiency model')
+    plt.savefig('Train performance of extended u-net model')
 
     pass
 

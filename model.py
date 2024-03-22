@@ -46,10 +46,10 @@ class Model(nn.Module):
         d2 = self.d2(d1, s4)
         d3 = self.d3(d2, s3)
         d4 = self.d4(d3, s2)
-        d4 = self.d4(d3, s1)
+        d5 = self.d5(d4, s1)
 
         """ Segmentation output """
-        outputs = self.outputs(d4)
+        outputs = self.outputs(d5)
         return outputs
 
 
