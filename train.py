@@ -13,6 +13,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import utils
+import torch.nn.utils.prune as prune
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -126,7 +127,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'extended_u_net')
+    torch.save(model.state_dict(), 'Original_model_data_aug')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -135,7 +136,7 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance of extended u-net model')
+    plt.savefig('Train performance of original model with data aughmentation')
 
     pass
 
@@ -156,11 +157,11 @@ def postprocess_dice(prediction, shape):
     return prediction
 
 def visualize():
-    model = Efficiency_model()
-    model.load_state_dict(torch.load("models\\efficiency_model_data_aug"))
+    model = Model()
+    model.load_state_dict(torch.load("models\\extended_u_net"))
 
     # define transform
-    regular_transform = transforms.Compose([transforms.Resize((270, 270)),
+    regular_transform = transforms.Compose([transforms.Resize((256, 256)),
                                             transforms.ToTensor(),
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
     
@@ -177,8 +178,28 @@ def visualize():
         processed = processed.squeeze()
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Images\\segmented image efficiency model.png")
+        plt.savefig("Images\\segmented image extended u-net model.png")
         break
+
+def prune_model():
+    model = Model()
+    model.load_state_dict(torch.load("models\\extended_u_net"))
+
+    params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(params)
+
+    for name, module in model.named_modules():
+        if isinstance(module, nn.Conv2d):
+            prune.l1_unstructured(module, 'weight', 0.5)
+            prune.remove(module, 'weight')
+
+    params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(params)
+
+    # save model
+    torch.save(model.state_dict(), 'pruned_extended_u_net')    
+
+    pass
 
 if __name__ == "__main__":
     # Get the arguments
@@ -186,9 +207,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(args)
 
-    
     #visualize()
     
+    #prune_model()
+
     #model = Model()
     #params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     #print(params)

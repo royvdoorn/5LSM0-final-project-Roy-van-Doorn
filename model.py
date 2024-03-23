@@ -15,20 +15,18 @@ class Model(nn.Module):
         self.e2 = encoder_block(64, 128)
         self.e3 = encoder_block(128, 256)
         self.e4 = encoder_block(256, 512)
-        self.e5 = encoder_block(512, 1024)
 
         """ Bottleneck """
-        self.b = conv_block(1024, 2048)
+        self.b = conv_block(512, 1024)
 
         """ Decoder """
-        self.d1 = decoder_block(2048, 1024)
-        self.d2 = decoder_block(1024, 512)
-        self.d3 = decoder_block(512, 256)
-        self.d4 = decoder_block(256, 128)
-        self.d5 = decoder_block(128, 64)
+        self.d1 = decoder_block(1024, 512)
+        self.d2 = decoder_block(512, 256)
+        self.d3 = decoder_block(256, 128)
+        self.d4 = decoder_block(128, 64)
 
         """ Classifier """
-        self.outputs = nn.Conv2d(64, 34, kernel_size=1, padding=0)
+        self.outputs = nn.Conv2d(64, 19, kernel_size=1, padding=0)
 
     def forward(self, inputs):
         """ Encoder """
@@ -36,20 +34,18 @@ class Model(nn.Module):
         s2, p2 = self.e2(p1)
         s3, p3 = self.e3(p2)
         s4, p4 = self.e4(p3)
-        s5, p5 = self.e5(p4)
 
         """ Bottleneck """
-        b = self.b(p5)
+        b = self.b(p4)
 
         """ Decoder """
-        d1 = self.d1(b, s5)
-        d2 = self.d2(d1, s4)
-        d3 = self.d3(d2, s3)
-        d4 = self.d4(d3, s2)
-        d5 = self.d5(d4, s1)
+        d1 = self.d1(b, s4)
+        d2 = self.d2(d1, s3)
+        d3 = self.d3(d2, s2)
+        d4 = self.d4(d3, s1)
 
         """ Segmentation output """
-        outputs = self.outputs(d5)
+        outputs = self.outputs(d4)
         return outputs
 
 
@@ -63,9 +59,6 @@ class conv_block(nn.Module):
         self.conv2 = nn.Conv2d(out_c, out_c, kernel_size=3, padding=1)
         self.bn2 = nn.BatchNorm2d(out_c)
 
-        self.conv3 = nn.Conv2d(out_c, out_c, kernel_size=3, padding=1)
-        self.bn3 = nn.BatchNorm2d(out_c)
-
         self.relu = nn.ReLU()
 
     def forward(self, inputs):
@@ -75,10 +68,6 @@ class conv_block(nn.Module):
 
         x = self.conv2(x)
         x = self.bn2(x)
-        x = self.relu(x)
-
-        x = self.conv3(x)
-        x = self.bn3(x)
         x = self.relu(x)
 
         return x
