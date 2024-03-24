@@ -6,7 +6,7 @@ import numpy as np
 """ segmentation model example
 """
 
-class Model(nn.Module):
+class Unet(nn.Module):
     def __init__(self):
         super().__init__()
 
@@ -107,6 +107,123 @@ class decoder_block(nn.Module):
         x = self.conv(x)
 
         return x
+
+
+class SegNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+        # Pooling layers
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2, return_indices=True)
+        self.unpool = nn.MaxUnpool2d(kernel_size=2, stride=2)
+
+        # Encode stage 1
+        self.enc_1a = nn.Conv2d(3, 64, kernel_size=3, padding=1)
+        self.enc_1b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
+        self.norm_1 = nn.BatchNorm2d(64, momentum=0.5)
+
+        # Encode stage 2
+        self.enc_2a = nn.Conv2d(64, 128, kernel_size=3, padding=1)
+        self.enc_2b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
+        self.norm_2 = nn.BatchNorm2d(128, momentum=0.5)
+
+        # Encode stage 3
+        self.enc_3a = nn.Conv2d(128, 256, kernel_size=3, padding=1)
+        self.enc_3b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+        self.norm_3 = nn.BatchNorm2d(256, momentum=0.5)
+        
+        # Encode stage 4
+        self.enc_4a = nn.Conv2d(256, 512, kernel_size=3, padding=1)
+        self.enc_4b = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.norm_4 = nn.BatchNorm2d(512, momentum=0.5)
+
+        # Encode stage 5
+        self.enc_5a = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.enc_5b = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.norm_5 = nn.BatchNorm2d(512, momentum=0.5) 
+
+        # Decode stage 5    
+        self.dec_5a = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.dec_5b = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+
+        # Decode stage 4    
+        self.dec_4a = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.dec_4b = nn.Conv2d(512, 256, kernel_size=3, padding=1)
+
+        # Decode stage 3    
+        self.dec_3a = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+        self.dec_3b = nn.Conv2d(256, 128, kernel_size=3, padding=1)
+
+        # Decode stage 2    
+        self.dec_2a = nn.Conv2d(128, 128, kernel_size=3, padding=1)
+        self.dec_2b = nn.Conv2d(128, 64, kernel_size=3, padding=1)
+
+        # Decode stage 1    
+        self.dec_1a = nn.Conv2d(64, 64, kernel_size=3, padding=1)
+        self.dec_1b = nn.Conv2d(64, 19, kernel_size=3, padding=1)     
+
+    def forward(self, x):
+        # Encode stage 1
+        x = function.relu(self.norm_1(self.enc_1a(x))) 
+        x = function.relu(self.norm_1(self.enc_1b(x))) 
+        x, ind1 = self.pool(x)
+        size1 = x.size()
+
+        # Encode stage 2
+        x = function.relu(self.norm_2(self.enc_2a(x))) 
+        x = function.relu(self.norm_2(self.enc_2b(x))) 
+        x, ind2 = self.pool(x)
+        size2 = x.size()
+
+        # Encode stage 3
+        x = function.relu(self.norm_3(self.enc_3a(x))) 
+        x = function.relu(self.norm_3(self.enc_3b(x))) 
+        x = function.relu(self.norm_3(self.enc_3b(x)))
+        x, ind3 = self.pool(x)
+        size3 = x.size()
+
+        # Encode stage 4
+        x = function.relu(self.norm_4(self.enc_4a(x))) 
+        x = function.relu(self.norm_4(self.enc_4b(x))) 
+        x = function.relu(self.norm_4(self.enc_4b(x)))
+        x, ind4 = self.pool(x)
+        size4 = x.size()
+
+        # Encode stage 5
+        x = function.relu(self.norm_5(self.enc_5a(x))) 
+        x = function.relu(self.norm_5(self.enc_5b(x))) 
+        x = function.relu(self.norm_5(self.enc_5b(x)))
+        x, ind5 = self.pool(x)
+
+        # Decode Stage 5
+        x = self.unpool(x, ind5, output_size=size4)
+        x = function.relu(self.norm_5(self.dec_5a(x)))
+        x = function.relu(self.norm_5(self.dec_5a(x)))
+        x = function.relu(self.norm_5(self.dec_5b(x)))
+
+        # Decode Stage 4
+        x = self.unpool(x, ind4, output_size=size3)
+        x = function.relu(self.norm_4(self.dec_4a(x)))
+        x = function.relu(self.norm_4(self.dec_4a(x)))
+        x = function.relu(self.norm_3(self.dec_4b(x)))
+
+        # Decode Stage 3
+        x = self.unpool(x, ind3, output_size=size2)
+        x = function.relu(self.norm_3(self.dec_3a(x)))
+        x = function.relu(self.norm_3(self.dec_3a(x)))
+        x = function.relu(self.norm_2(self.dec_3b(x)))
+
+        # Decode Stage 2
+        x = self.unpool(x, ind2, output_size=size1)
+        x = function.relu(self.norm_2(self.dec_2a(x)))
+        x = function.relu(self.norm_1(self.dec_2b(x)))
+
+        # Decode Stage 1
+        x = self.unpool(x, ind1)
+        x = function.relu(self.norm_1(self.dec_1a(x)))
+        x = self.dec_1b(x)
+
+        return x   
 
 
 class Efficiency_model(nn.Module):
