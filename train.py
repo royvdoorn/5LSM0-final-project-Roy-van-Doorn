@@ -65,13 +65,13 @@ def main(args):
 
     # data loading
     path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
     validation_ratio = 0.1
     val_size = int(validation_ratio*len(dataset))
     train_size = len(dataset)-val_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    batch_size = 1
+    batch_size = 50
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
 
@@ -158,7 +158,7 @@ def postprocess_dice(prediction, shape):
 
 def visualize():
     model = Unet()
-    model.load_state_dict(torch.load("models\\Original_model_data_aug"))
+    model.load_state_dict(torch.load("models\\SegNet model"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -178,7 +178,7 @@ def visualize():
         processed = processed.squeeze()
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Images\\segmented image extended u-net model.png")
+        plt.savefig("Images\\segmented image SegNet model.png")
         break
 
 def prune_model():
@@ -205,9 +205,9 @@ if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    #main(args)
+    main(args)
 
-    visualize()
+    #visualize()
     
     #prune_model()
 
