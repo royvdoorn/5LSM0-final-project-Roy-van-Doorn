@@ -157,7 +157,7 @@ def postprocess_dice(prediction, shape):
     return prediction
 
 def visualize():
-    model = Unet()
+    model = SegNet()
     model.load_state_dict(torch.load("models\\SegNet model"))
 
     # define transform
@@ -205,9 +205,9 @@ if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    main(args)
+    #main(args)
 
-    #visualize()
+    visualize()
     
     #prune_model()
 
