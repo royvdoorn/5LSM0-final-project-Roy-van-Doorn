@@ -162,7 +162,7 @@ class SegNet(nn.Module):
 
         # Decode stage 1    
         self.dec_1a = nn.Conv2d(2*64, 64, kernel_size=3, padding=1)
-        self.dec_1b = nn.Conv2d(64, 19, kernel_size=3, padding=1)     
+        self.dec_1b = nn.Conv2d(64, 34, kernel_size=3, padding=1)     
 
     def forward(self, x):
         # Encode stage 1
