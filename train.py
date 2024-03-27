@@ -157,8 +157,8 @@ def postprocess_dice(prediction, shape):
     return prediction
 
 def visualize():
-    model = SegNet()
-    model.load_state_dict(torch.load("models\\SegNet model"))
+    model = Unet()
+    model.load_state_dict(torch.load("models\\Original_model_25_epoch"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -178,7 +178,7 @@ def visualize():
         processed = processed.squeeze()
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Images\\segmented image SegNet model.png")
+        plt.savefig("Images\\segmented image original model model.png")
         break
 
 def prune_model():
@@ -205,9 +205,9 @@ if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    #main(args)
+    main(args)
 
-    visualize()
+    #visualize()
     
     #prune_model()
 
