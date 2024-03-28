@@ -162,7 +162,7 @@ class SegNet(nn.Module):
 
         # Decode stage 1    
         self.dec_1a = nn.Conv2d(2*64, 64, kernel_size=3, padding=1)
-        self.dec_1b = nn.Conv2d(64, 34, kernel_size=3, padding=1)     
+        self.dec_1b = nn.Conv2d(64, 1, kernel_size=3, padding=1)     
 
     def forward(self, x):
         # Encode stage 1
@@ -228,7 +228,7 @@ class SegNet(nn.Module):
         x = self.unpool(x, ind1)
         x = torch.cat([x, x1], axis=1)
         x = function.relu(self.norm_1(self.dec_1a(x)))
-        x = self.dec_1b(x)
+        x = function.softmax(self.dec_1b(x))
 
         return x   
 

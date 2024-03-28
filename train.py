@@ -65,13 +65,13 @@ def main(args):
 
     # data loading
     path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
     validation_ratio = 0.1
     val_size = int(validation_ratio*len(dataset))
     train_size = len(dataset)-val_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    batch_size = 50
+    batch_size = 1
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
 
@@ -87,7 +87,7 @@ def main(args):
     model = SegNet()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
-    criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
+    criterion = DiceLoss()#torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
@@ -127,7 +127,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'SegNet model')
+    torch.save(model.state_dict(), 'SegNet model with Dice loss')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -136,7 +136,7 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance of SegNet')
+    plt.savefig('Train performance of SegNet with Dice loss')
 
     pass
 
@@ -157,8 +157,8 @@ def postprocess_dice(prediction, shape):
     return prediction
 
 def visualize():
-    model = Unet()
-    model.load_state_dict(torch.load("models\\Original_model_25_epoch"))
+    model = SegNet()
+    model.load_state_dict(torch.load("models\\SegNet model"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -178,7 +178,7 @@ def visualize():
         processed = processed.squeeze()
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Images\\segmented image original model model.png")
+        plt.savefig("Images\\segmented image Segnet model.png")
         break
 
 def prune_model():
