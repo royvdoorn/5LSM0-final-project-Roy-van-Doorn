@@ -88,7 +88,7 @@ def main(args):
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
@@ -157,8 +157,8 @@ def postprocess_dice(prediction, shape):
     return prediction
 
 def visualize():
-    model = SegNet()
-    model.load_state_dict(torch.load("models\\SegNet model with Dice loss"))
+    model = Unet()
+    model.load_state_dict(torch.load("models\\Unet single batch"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -178,7 +178,7 @@ def visualize():
         processed = processed.squeeze()
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Images\\segmented image Segnet model with Dice.png")
+        plt.savefig("Images\\segmented image Unet single batch.png")
         break
 
 def prune_model():
