@@ -158,7 +158,7 @@ def postprocess_dice(prediction, shape):
 
 def visualize():
     model = Unet()
-    model.load_state_dict(torch.load("models\\Unet single batch"))
+    model.load_state_dict(torch.load("models\\Original_model_25_epoch"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -176,9 +176,11 @@ def visualize():
         processed = postprocess(prediction, shape=(256, 256))
         processed = processed.cpu().detach().numpy()
         processed = processed.squeeze()
+        print(np.unique(processed))
+        print(processed)
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        plt.savefig("Images\\segmented image Unet single batch.png")
+        #plt.savefig("Images\\segmented image original model 25 epoch.png")
         break
 
 def prune_model():
