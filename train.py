@@ -92,7 +92,7 @@ def main(args):
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
-    epochs = 25
+    epochs = 15
 
     train_loss = []
     val_loss = []
