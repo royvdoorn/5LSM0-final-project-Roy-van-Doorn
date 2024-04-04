@@ -127,7 +127,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'Unet test submission')
+    torch.save(model.state_dict(), 'SegNet test submission')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
