@@ -71,7 +71,7 @@ def main(args):
     train_size = len(dataset)-val_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    batch_size = 1
+    batch_size = 25
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
 
@@ -88,11 +88,11 @@ def main(args):
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)#, weight_decay=0.0001)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
-    epochs = 15
+    epochs = 5
 
     train_loss = []
     val_loss = []
@@ -127,7 +127,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'Unet single batch anti overfit')
+    torch.save(model.state_dict(), 'Unet test submission')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -140,6 +140,11 @@ def main(args):
 
     pass
 
+def postprocess_dice(prediction, shape):
+    prediction = prediction*18
+    prediction = prediction.int()
+    return prediction
+
 def postprocess(prediction, shape):
     """Post process prediction to mask:
     Input is the prediction tensor provided by your model, the original image size.
@@ -149,16 +154,25 @@ def postprocess(prediction, shape):
     prediction_soft = m(prediction)
     prediction_max = torch.argmax(prediction_soft, axis=1)
     prediction = transforms.functional.resize(prediction_max, size=shape, interpolation=transforms.InterpolationMode.NEAREST)
-    return prediction
+    processed = prediction.cpu().detach().numpy()
+    processed = processed.squeeze()
+    return processed
 
-def postprocess_dice(prediction, shape):
-    prediction = prediction*18
-    prediction = prediction.int()
-    return prediction
+def preprocess(img):
+    """preproces image:
+    input is a PIL image.
+    Output image should be pytorch tensor that is compatible with your model"""
+
+    regular_transform = transforms.Compose([transforms.Resize((256, 256)),
+                                            transforms.ToTensor(),
+                                            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+    img = regular_transform(img)
+    img = img.unsqueeze(0)
+    return img
 
 def visualize():
-    model = Unet()
-    model.load_state_dict(torch.load("models\\Original_model_25_epoch"))
+    model = SegNet()
+    model.load_state_dict(torch.load("models\\Segnet model"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -172,15 +186,14 @@ def visualize():
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     for X, Y in train_loader:
+        #X = preprocess(X)
         prediction = model(X)
-        processed = postprocess(prediction, shape=(256, 256))
-        processed = processed.cpu().detach().numpy()
-        processed = processed.squeeze()
+        processed = postprocess(prediction, shape=(1024, 2048))
         print(np.unique(processed))
         print(processed)
         plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
         plt.title('Segmentation')
-        #plt.savefig("Images\\segmented image original model 25 epoch.png")
+        plt.savefig("Images\\segmented image SegNet model.png")
         break
 
 def prune_model():
