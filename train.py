@@ -84,7 +84,7 @@ def main(args):
     '''
 
     # define model
-    model = Unet()#.cuda()
+    model = SegNet()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
@@ -171,8 +171,11 @@ def preprocess(img):
     return img
 
 def visualize():
-    model = SegNet()
-    model.load_state_dict(torch.load("models\\Segnet model"))
+    model_SegNet = Unet()
+    model_SegNet.load_state_dict(torch.load("models\\Original_model_25_epoch"))
+
+    model_Unet = Unet()
+    model_Unet.load_state_dict(torch.load("models\\Unet single batch anti overfit"))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -187,13 +190,58 @@ def visualize():
 
     for X, Y in train_loader:
         #X = preprocess(X)
+        prediction_Segnet = model_SegNet(X)
+        processed_SegNet = postprocess(prediction_Segnet, shape=(1024, 2048))
+
+        prediction_Unet = model_Unet(X)
+        processed_Unet = postprocess(prediction_Unet, shape=(1024, 2048))
+
+        fig, axs = plt.subplots(1, 2, figsize=(12, 6))  # 1 row, 2 columns
+        axs[0].imshow(processed_SegNet, cmap='tab20c')
+        axs[0].set_title('Unet')
+        axs[1].imshow(processed_Unet, cmap='tab20c')
+        axs[1].set_title('Unet single batch')
+        fig.suptitle('Segmentation')
+        plt.savefig("Images\\segmented images of Unet and SegNet model.png")
+        break
+
+def visualize_report():
+    model = Unet()
+    model.load_state_dict(torch.load("models\\Original_model_25_epoch"))
+    mean = [0.485, 0.456, 0.406]
+    std = [0.229, 0.224, 0.225]
+
+    # define transform
+    regular_transform = transforms.Compose([transforms.Resize((256, 256)),
+                                            transforms.ToTensor(),
+                                            transforms.Normalize(mean=mean, std=std)])
+    
+    path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
+    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+
+    batch_size = 1
+    train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+    for X, Y in train_loader:
         prediction = model(X)
-        processed = postprocess(prediction, shape=(1024, 2048))
-        print(np.unique(processed))
-        print(processed)
-        plt.imshow(processed, cmap='tab20c')  # You can choose any colormap you prefer
-        plt.title('Segmentation')
-        plt.savefig("Images\\segmented image SegNet model.png")
+        processed = postprocess(prediction, shape=(256, 256))
+
+        fig, axs = plt.subplots(1, 3, figsize=(12, 6))  # 1 row, 2 columns
+        X = X.cpu().detach().numpy().squeeze(0).transpose(1, 2, 0)
+        X = X * std + mean
+        Y = (Y*255).squeeze(1)#.cpu().detach().numpy().transpose(1, 2, 0)
+        Y = utils.map_id_to_train_id(Y)
+        Y = Y.cpu().detach().numpy().transpose(1, 2, 0)
+        Y[Y == 255] = 0
+
+        axs[0].imshow(X)
+        axs[0].set_title('X')
+        axs[1].imshow(Y, cmap='tab20c')
+        axs[1].set_title('Y')
+        axs[2].imshow(processed, cmap='tab20c')
+        axs[2].set_title('prediction')
+        fig.suptitle('Report visualization')
+        plt.savefig("Images\\Report visualization.png")
         break
 
 def prune_model():
@@ -223,6 +271,7 @@ if __name__ == "__main__":
     main(args)
 
     #visualize()
+    #visualize_report()
     
     #prune_model()
 
