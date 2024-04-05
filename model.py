@@ -188,7 +188,7 @@ class SegNet(nn.Module):
 
         # Decode stage 1    
         self.dec_1a = nn.Conv2d(2*64, 64, kernel_size=3, padding=1)
-        self.dec_1b = nn.Conv2d(64, 34, kernel_size=3, padding=1)
+        self.dec_1b = nn.Conv2d(64, 19, kernel_size=3, padding=1)
         self.norm_dec_1 = nn.BatchNorm2d(64, momentum=0.5)     
 
     def forward(self, x):
@@ -264,31 +264,42 @@ class Efficiency_model(nn.Module):
     def __init__(self):
         super().__init__()
         self.enc_1a = nn.Conv2d(3, 64, kernel_size=3, padding=1)
-        self.norm_1 = nn.BatchNorm2d(64)
         self.enc_1b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
+        self.norm_enc_1a = nn.BatchNorm2d(64)
+        self.norm_enc_1b = nn.BatchNorm2d(64)
 
         self.enc_2a = nn.Conv2d(64, 128, kernel_size=3, padding=1)
-        self.norm_2 = nn.BatchNorm2d(128)
         self.enc_2b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
+        self.norm_enc_2a = nn.BatchNorm2d(128)
+        self.norm_enc_2b = nn.BatchNorm2d(128)
 
         self.enc_3a = nn.Conv2d(128, 256, kernel_size=3, padding=1)
-        self.norm_3 = nn.BatchNorm2d(256)
         self.enc_3b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+        self.norm_enc_3a = nn.BatchNorm2d(256)
+        self.norm_enc_3b = nn.BatchNorm2d(256)
         
         self.conv_latent_a = nn.Conv2d(256, 512, kernel_size=3, padding=1)
         self.conv_latent_b = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.norm_lat_a = nn.BatchNorm2d(512)
+        self.norm_lat_b = nn.BatchNorm2d(512)
 
-        self.up_1 = nn.ConvTranspose2d(512, 256, kernel_size=3, stride=3, padding=0)
-        self.dec_1a = nn.Conv2d(512, 256, kernel_size=3, padding=1)
-        self.dec_1b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+        self.up_3 = nn.ConvTranspose2d(512, 256, kernel_size=3, stride=3, padding=0)
+        self.dec_3a = nn.Conv2d(512, 256, kernel_size=3, padding=1)
+        self.dec_3b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+        self.norm_dec_3a = nn.BatchNorm2d(256)
+        self.norm_dec_3b = nn.BatchNorm2d(256)
 
         self.up_2 = nn.ConvTranspose2d(256, 128, kernel_size=3, stride=3, padding=0)
         self.dec_2a = nn.Conv2d(256, 128, kernel_size=3, padding=1)
         self.dec_2b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
+        self.norm_dec_2a = nn.BatchNorm2d(128)
+        self.norm_dec_2b = nn.BatchNorm2d(128)
 
-        self.up_3 = nn.ConvTranspose2d(128, 64, kernel_size=3, stride=3, padding=0)
-        self.dec_3a = nn.Conv2d(128, 64, kernel_size=3, padding=1)
-        self.dec_3b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
+        self.up_1 = nn.ConvTranspose2d(128, 64, kernel_size=3, stride=3, padding=0)
+        self.dec_1a = nn.Conv2d(128, 64, kernel_size=3, padding=1)
+        self.dec_1b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
+        self.norm_dec_1a = nn.BatchNorm2d(64)
+        self.norm_dec_1b = nn.BatchNorm2d(64)
 
         self.out = nn.Conv2d(64, 19, kernel_size=1, padding=0)
 
@@ -297,41 +308,41 @@ class Efficiency_model(nn.Module):
 
     def forward(self, x):
         # Encode
-        x = self.norm_1(function.relu(self.enc_1a(x)))
-        x1 = self.norm_1(function.relu(self.enc_1b(x)))
+        x = self.norm_enc_1a(function.relu(self.enc_1a(x)))
+        x1 = self.norm_enc_1b(function.relu(self.enc_1b(x)))
         x = self.dropout(self.pool(x1))
 
         # Encode
-        x = self.norm_2(function.relu(self.enc_2a(x)))
-        x2 = self.norm_2(function.relu(self.enc_2b(x)))
+        x = self.norm_enc_2a(function.relu(self.enc_2a(x)))
+        x2 = self.norm_enc_2b(function.relu(self.enc_2b(x)))
         x = self.dropout(self.pool(x2))
 
         # Encode
-        x = self.norm_3(function.relu(self.enc_3a(x)))
-        x3 = self.norm_3(function.relu(self.enc_3b(x)))
+        x = self.norm_enc_3a(function.relu(self.enc_3a(x)))
+        x3 = self.norm_enc_3b(function.relu(self.enc_3b(x)))
         x = self.dropout(self.pool(x3))
 
         # Latent
-        x = function.relu(self.conv_latent_a(x))
-        x = function.relu(self.conv_latent_b(x))
+        x = self.norm_lat_a(function.relu(self.conv_latent_a(x)))
+        x = self.norm_lat_b(function.relu(self.conv_latent_b(x)))
 
         # Decode
-        x = self.up_1(x)
+        x = self.up_3(x)
         x = torch.cat([x, x3], dim=1)
-        x = self.norm_3(function.relu(self.dec_1a(x)))
-        x = self.dropout(self.norm_3(function.relu(self.dec_1b(x))))
+        x = self.norm_dec_3a(function.relu(self.dec_3a(x)))
+        x = self.dropout(self.norm_dec_3b(function.relu(self.dec_3b(x))))
 
         # Decode
         x = self.up_2(x)
         x = torch.cat([x, x2], dim=1)
-        x = self.norm_2(function.relu(self.dec_2a(x)))
-        x = self.dropout(self.norm_2(function.relu(self.dec_2b(x))))
+        x = self.norm_dec_2a(function.relu(self.dec_2a(x)))
+        x = self.dropout(self.norm_dec_2b(function.relu(self.dec_2b(x))))
 
         # Decode
-        x = self.up_3(x)
+        x = self.up_1(x)
         x = torch.cat([x, x1], dim=1)
-        x = self.norm_1(function.relu(self.dec_3a(x)))
-        x = self.dropout(self.norm_1(function.relu(self.dec_3b(x))))
+        x = self.norm_dec_1a(function.relu(self.dec_1a(x)))
+        x = self.dropout(self.norm_dec_1b(function.relu(self.dec_1b(x))))
 
         # Out
         x = self.out(x)
