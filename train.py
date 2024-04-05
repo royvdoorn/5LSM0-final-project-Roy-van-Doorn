@@ -8,6 +8,7 @@ from argparse import ArgumentParser
 from torch.utils.data import DataLoader, random_split
 import torch.nn as nn
 import torch
+from matplotlib.colors import ListedColormap, BoundaryNorm
 from model import SegNet, Unet, Efficiency_model
 import os
 import numpy as np
@@ -88,7 +89,7 @@ def main(args):
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)#, weight_decay=0.0001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
@@ -127,7 +128,7 @@ def main(args):
         print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
 
     # save model
-    torch.save(model.state_dict(), 'SegNet test submission')
+    torch.save(model.state_dict(), 'SegNet model')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -136,7 +137,7 @@ def main(args):
     plt.ylabel("Loss")
     plt.title("Loss of neural network")
     plt.legend()
-    plt.savefig('Train performance of Unet single batch anti overfit')
+    plt.savefig('Train performance of SegNet model')
 
     pass
 
@@ -171,11 +172,20 @@ def preprocess(img):
     return img
 
 def visualize():
-    model_SegNet = Unet()
-    model_SegNet.load_state_dict(torch.load("models\\Original_model_25_epoch"))
+    model_SegNet = SegNet()
+    model_SegNet.load_state_dict(torch.load("models\\SegNet model"))
+    model_SegNet.eval()
 
     model_Unet = Unet()
-    model_Unet.load_state_dict(torch.load("models\\Unet single batch anti overfit"))
+    model_Unet.load_state_dict(torch.load("models\\Original_model_25_epoch"))
+    model_Unet.eval()
+
+    # Define your custom colormap for specific color for each number
+    colors = ['black', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 'orange', 'gray', 'purple', 
+              'orange', 'pink', 'olive', 'navy', 'teal', 'coral', 'lime', 'indigo', 'peru']
+    custom_cmap = ListedColormap(colors)
+    bounds = np.arange(len(colors) + 1)
+    norm = BoundaryNorm(bounds, len(colors))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -192,15 +202,17 @@ def visualize():
         #X = preprocess(X)
         prediction_Segnet = model_SegNet(X)
         processed_SegNet = postprocess(prediction_Segnet, shape=(1024, 2048))
+        print("Unique classes in SegNet prediction: ", np.unique(processed_SegNet))
 
         prediction_Unet = model_Unet(X)
         processed_Unet = postprocess(prediction_Unet, shape=(1024, 2048))
+        print("Unique classes in Unet prediction:   ", np.unique(processed_Unet))
 
         fig, axs = plt.subplots(1, 2, figsize=(12, 6))  # 1 row, 2 columns
-        axs[0].imshow(processed_SegNet, cmap='tab20c')
-        axs[0].set_title('Unet')
-        axs[1].imshow(processed_Unet, cmap='tab20c')
-        axs[1].set_title('Unet single batch')
+        axs[0].imshow(processed_SegNet, cmap=custom_cmap, norm=norm)
+        axs[0].set_title('SegNet')
+        axs[1].imshow(processed_Unet, cmap=custom_cmap, norm=norm)
+        axs[1].set_title('Unet')
         fig.suptitle('Segmentation')
         plt.savefig("Images\\segmented images of Unet and SegNet model.png")
         break
@@ -210,6 +222,13 @@ def visualize_report():
     model.load_state_dict(torch.load("models\\Original_model_25_epoch"))
     mean = [0.485, 0.456, 0.406]
     std = [0.229, 0.224, 0.225]
+    
+    # Define your custom colormap for specific color for each number
+    colors = ['black', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 'orange', 'gray', 'purple', 
+              'orange', 'pink', 'olive', 'navy', 'teal', 'coral', 'lime', 'indigo', 'peru']
+    custom_cmap = ListedColormap(colors)
+    bounds = np.arange(len(colors) + 1)
+    norm = BoundaryNorm(bounds, len(colors))
 
     # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
@@ -236,9 +255,9 @@ def visualize_report():
 
         axs[0].imshow(X)
         axs[0].set_title('X')
-        axs[1].imshow(Y, cmap='tab20c')
+        axs[1].imshow(Y, cmap=custom_cmap, norm=norm)
         axs[1].set_title('Y')
-        axs[2].imshow(processed, cmap='tab20c')
+        axs[2].imshow(processed, cmap=custom_cmap, norm=norm)
         axs[2].set_title('prediction')
         fig.suptitle('Report visualization')
         plt.savefig("Images\\Report visualization.png")

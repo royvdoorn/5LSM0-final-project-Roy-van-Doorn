@@ -123,114 +123,138 @@ class SegNet(nn.Module):
         # Encode stage 1
         self.enc_1a = nn.Conv2d(3, 64, kernel_size=3, padding=1)
         self.enc_1b = nn.Conv2d(64, 64, kernel_size=3, padding=1)
-        self.norm_1 = nn.BatchNorm2d(64, momentum=0.5)
+        self.norm_enc_1a = nn.BatchNorm2d(64, momentum=0.5)
+        self.norm_enc_1b = nn.BatchNorm2d(64, momentum=0.5)
 
         # Encode stage 2
         self.enc_2a = nn.Conv2d(64, 128, kernel_size=3, padding=1)
         self.enc_2b = nn.Conv2d(128, 128, kernel_size=3, padding=1)
-        self.norm_2 = nn.BatchNorm2d(128, momentum=0.5)
+        self.norm_enc_2a = nn.BatchNorm2d(128, momentum=0.5)
+        self.norm_enc_2b = nn.BatchNorm2d(128, momentum=0.5)
 
         # Encode stage 3
         self.enc_3a = nn.Conv2d(128, 256, kernel_size=3, padding=1)
         self.enc_3b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
-        self.norm_3 = nn.BatchNorm2d(256, momentum=0.5)
+        self.enc_3c = nn.Conv2d(256, 256, kernel_size=3, padding=1)
+        self.norm_enc_3a = nn.BatchNorm2d(256, momentum=0.5)
+        self.norm_enc_3b = nn.BatchNorm2d(256, momentum=0.5)
+        self.norm_enc_3c = nn.BatchNorm2d(256, momentum=0.5)
         
         # Encode stage 4
         self.enc_4a = nn.Conv2d(256, 512, kernel_size=3, padding=1)
         self.enc_4b = nn.Conv2d(512, 512, kernel_size=3, padding=1)
-        self.norm_4 = nn.BatchNorm2d(512, momentum=0.5)
+        self.enc_4c = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.norm_enc_4a = nn.BatchNorm2d(512, momentum=0.5)
+        self.norm_enc_4b = nn.BatchNorm2d(512, momentum=0.5)
+        self.norm_enc_4c = nn.BatchNorm2d(512, momentum=0.5)
 
         # Encode stage 5
         self.enc_5a = nn.Conv2d(512, 512, kernel_size=3, padding=1)
         self.enc_5b = nn.Conv2d(512, 512, kernel_size=3, padding=1)
-        self.norm_5 = nn.BatchNorm2d(512, momentum=0.5) 
+        self.enc_5c = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.norm_enc_5a = nn.BatchNorm2d(512, momentum=0.5)
+        self.norm_enc_5b = nn.BatchNorm2d(512, momentum=0.5)
+        self.norm_enc_5c = nn.BatchNorm2d(512, momentum=0.5) 
 
         # Decode stage 5    
         self.dec_5a = nn.Conv2d(2*512, 512, kernel_size=3, padding=1)
         self.dec_5b = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.dec_5c = nn.Conv2d(512, 512, kernel_size=3, padding=1)
+        self.norm_dec_5a = nn.BatchNorm2d(512, momentum=0.5)
+        self.norm_dec_5b = nn.BatchNorm2d(512, momentum=0.5)
+        self.norm_dec_5c = nn.BatchNorm2d(512, momentum=0.5) 
 
         # Decode stage 4    
         self.dec_4a = nn.Conv2d(2*512, 512, kernel_size=3, padding=1)
         self.dec_4b = nn.Conv2d(512, 512, kernel_size=3, padding=1)
         self.dec_4c = nn.Conv2d(512, 256, kernel_size=3, padding=1)
+        self.norm_dec_4a = nn.BatchNorm2d(512, momentum=0.5)
+        self.norm_dec_4b = nn.BatchNorm2d(512, momentum=0.5)
+        self.norm_dec_4c = nn.BatchNorm2d(256, momentum=0.5)
 
         # Decode stage 3    
         self.dec_3a = nn.Conv2d(2*256, 256, kernel_size=3, padding=1)
         self.dec_3b = nn.Conv2d(256, 256, kernel_size=3, padding=1)
         self.dec_3c = nn.Conv2d(256, 128, kernel_size=3, padding=1)
+        self.norm_dec_3a = nn.BatchNorm2d(256, momentum=0.5)
+        self.norm_dec_3b = nn.BatchNorm2d(256, momentum=0.5)
+        self.norm_dec_3c = nn.BatchNorm2d(128, momentum=0.5)
 
         # Decode stage 2    
         self.dec_2a = nn.Conv2d(2*128, 128, kernel_size=3, padding=1)
         self.dec_2b = nn.Conv2d(128, 64, kernel_size=3, padding=1)
+        self.norm_dec_2a = nn.BatchNorm2d(128, momentum=0.5)
+        self.norm_dec_2b = nn.BatchNorm2d(64, momentum=0.5)
 
         # Decode stage 1    
         self.dec_1a = nn.Conv2d(2*64, 64, kernel_size=3, padding=1)
-        self.dec_1b = nn.Conv2d(64, 34, kernel_size=3, padding=1)     
+        self.dec_1b = nn.Conv2d(64, 34, kernel_size=3, padding=1)
+        self.norm_dec_1 = nn.BatchNorm2d(64, momentum=0.5)     
 
     def forward(self, x):
         # Encode stage 1
-        x = function.relu(self.norm_1(self.enc_1a(x))) 
-        x1 = function.relu(self.norm_1(self.enc_1b(x))) 
+        x = function.relu(self.norm_enc_1a(self.enc_1a(x))) 
+        x1 = function.relu(self.norm_enc_1b(self.enc_1b(x))) 
         x, ind1 = self.pool(x1)
         size1 = x.size()
 
         # Encode stage 2
-        x = function.relu(self.norm_2(self.enc_2a(x))) 
-        x2 = function.relu(self.norm_2(self.enc_2b(x))) 
+        x = function.relu(self.norm_enc_2a(self.enc_2a(x))) 
+        x2 = function.relu(self.norm_enc_2b(self.enc_2b(x))) 
         x, ind2 = self.pool(x2)
         size2 = x.size()
 
         # Encode stage 3
-        x = function.relu(self.norm_3(self.enc_3a(x))) 
-        x = function.relu(self.norm_3(self.enc_3b(x))) 
-        x3 = function.relu(self.norm_3(self.enc_3b(x)))
+        x = function.relu(self.norm_enc_3a(self.enc_3a(x))) 
+        x = function.relu(self.norm_enc_3b(self.enc_3b(x))) 
+        x3 = function.relu(self.norm_enc_3c(self.enc_3c(x)))
         x, ind3 = self.pool(x3)
         size3 = x.size()
 
         # Encode stage 4
-        x = function.relu(self.norm_4(self.enc_4a(x))) 
-        x = function.relu(self.norm_4(self.enc_4b(x))) 
-        x4 = function.relu(self.norm_4(self.enc_4b(x)))
+        x = function.relu(self.norm_enc_4a(self.enc_4a(x))) 
+        x = function.relu(self.norm_enc_4b(self.enc_4b(x))) 
+        x4 = function.relu(self.norm_enc_4c(self.enc_4c(x)))
         x, ind4 = self.pool(x4)
         size4 = x.size()
 
         # Encode stage 5
-        x = function.relu(self.norm_5(self.enc_5a(x))) 
-        x = function.relu(self.norm_5(self.enc_5b(x))) 
-        x5 = function.relu(self.norm_5(self.enc_5b(x)))
+        x = function.relu(self.norm_enc_5a(self.enc_5a(x))) 
+        x = function.relu(self.norm_enc_5b(self.enc_5b(x))) 
+        x5 = function.relu(self.norm_enc_5c(self.enc_5c(x)))
         x, ind5 = self.pool(x5)
 
         # Decode Stage 5
         x = self.unpool(x, ind5, output_size=size4)
         x = torch.cat([x, x5], axis=1)
-        x = function.relu(self.norm_5(self.dec_5a(x)))
-        x = function.relu(self.norm_5(self.dec_5b(x)))
-        x = function.relu(self.norm_5(self.dec_5b(x)))
+        x = function.relu(self.norm_dec_5a(self.dec_5a(x)))
+        x = function.relu(self.norm_dec_5b(self.dec_5b(x)))
+        x = function.relu(self.norm_dec_5c(self.dec_5c(x)))
 
         # Decode Stage 4
         x = self.unpool(x, ind4, output_size=size3)
         x = torch.cat([x, x4], axis=1)
-        x = function.relu(self.norm_4(self.dec_4a(x)))
-        x = function.relu(self.norm_4(self.dec_4b(x)))
-        x = function.relu(self.norm_3(self.dec_4c(x)))
+        x = function.relu(self.norm_dec_4a(self.dec_4a(x)))
+        x = function.relu(self.norm_dec_4b(self.dec_4b(x)))
+        x = function.relu(self.norm_dec_4c(self.dec_4c(x)))
 
         # Decode Stage 3
         x = self.unpool(x, ind3, output_size=size2)
         x = torch.cat([x, x3], axis=1)
-        x = function.relu(self.norm_3(self.dec_3a(x)))
-        x = function.relu(self.norm_3(self.dec_3b(x)))
-        x = function.relu(self.norm_2(self.dec_3c(x)))
+        x = function.relu(self.norm_dec_3a(self.dec_3a(x)))
+        x = function.relu(self.norm_dec_3b(self.dec_3b(x)))
+        x = function.relu(self.norm_dec_3c(self.dec_3c(x)))
 
         # Decode Stage 2
         x = self.unpool(x, ind2, output_size=size1)
         x = torch.cat([x, x2], axis=1)
-        x = function.relu(self.norm_2(self.dec_2a(x)))
-        x = function.relu(self.norm_1(self.dec_2b(x)))
+        x = function.relu(self.norm_dec_2a(self.dec_2a(x)))
+        x = function.relu(self.norm_dec_2b(self.dec_2b(x)))
 
         # Decode Stage 1
         x = self.unpool(x, ind1)
         x = torch.cat([x, x1], axis=1)
-        x = function.relu(self.norm_1(self.dec_1a(x)))
+        x = function.relu(self.norm_dec_1(self.dec_1a(x)))
         x = self.dec_1b(x)
 
         return x   
