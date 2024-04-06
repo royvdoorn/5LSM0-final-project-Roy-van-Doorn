@@ -15,6 +15,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import utils
 import torch.nn.utils.prune as prune
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -58,39 +60,29 @@ class DiceLoss(nn.Module):
 def main(args):
     """define your model, trainingsloop optimitzer etc. here"""
 
-    # define transform
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
-                                            #transforms.RandomVerticalFlip(p=0.25),
                                             transforms.ToTensor(),
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     # data loading
     path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
     validation_ratio = 0.1
     val_size = int(validation_ratio*len(dataset))
     train_size = len(dataset)-val_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    batch_size = 25
+    batch_size = 1
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)#, num_worker=8)
-
-    # visualize example images
-    '''
-    for X, Y in train_dataset:
-        transforms.ToPILImage()((X).byte()).save("C:/Users/20192326/Documents/YEAR 1 AIES/Neural networks for computer vision/Assignment/FinalAssignment/Example_input_image.png")
-        transforms.ToPILImage()((Y*255).byte()).save("C:/Users/20192326/Documents/YEAR 1 AIES/Neural networks for computer vision/Assignment/FinalAssignment/Example_segmented_image.png")
-        break
-    '''
 
     # define model
     model = SegNet()#.cuda()
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.001)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.8)
 
     # training/validation loop
     epochs = 25
@@ -122,10 +114,10 @@ def main(args):
             loss_val = criterion(predictions, target)
             val_loss_epoch += loss_val
 
-        train_loss.append(float(train_loss_epoch)/train_size)
-        val_loss.append(float(val_loss_epoch)/val_size)
-        print("Average train loss of epoch " + str(i+1) + ": " + str(float(train_loss_epoch)/train_size))
-        print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)/val_size))
+        train_loss.append(float(train_loss_epoch))
+        val_loss.append(float(val_loss_epoch))
+        print("Average train loss of epoch " + str(i+1) + ": " + str(float(train_loss_epoch)))
+        print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)))
 
     # save model
     torch.save(model.state_dict(), 'SegNet model')
@@ -163,10 +155,10 @@ def preprocess(img):
     """preproces image:
     input is a PIL image.
     Output image should be pytorch tensor that is compatible with your model"""
-
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
                                             transforms.ToTensor(),
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+                                            
     img = regular_transform(img)
     img = img.unsqueeze(0)
     return img
@@ -180,6 +172,9 @@ def visualize():
     model_Unet.load_state_dict(torch.load("models\\Original_model_25_epoch"))
     model_Unet.eval()
 
+    mean = [0.485, 0.456, 0.406]
+    std = [0.229, 0.224, 0.225]
+
     # Define your custom colormap for specific color for each number
     colors = ['black', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 'orange', 'gray', 'purple', 
               'orange', 'pink', 'olive', 'navy', 'teal', 'coral', 'lime', 'indigo', 'peru']
@@ -188,31 +183,62 @@ def visualize():
     norm = BoundaryNorm(bounds, len(colors))
 
     # define transform
-    regular_transform = transforms.Compose([transforms.Resize((256, 256)),
-                                            transforms.ToTensor(),
-                                            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+    #regular_transform = transforms.Compose([transforms.Resize((256, 256)),
+    #                                        transforms.ToTensor(),
+    #                                       transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+    
+    # define transform
+    #complete_transform = transforms.Compose([transforms.Resize((256, 256)),
+    #                                        transforms.RandomVerticalFlip(p=0.25),
+    #                                        transforms.ToTensor()])
+                                            #transforms.RandomCrop((256,256))])
+                                            #transforms.RandomResizedCrop(size=(256,256))])#, scale=(0.25, 1.0), ratio=(0.5, 1.5))])
+
+    complete_transform = A.Compose([#A.resize(height=256, width=256),
+                                    A.VerticalFlip(p=0.25),
+                                    A.RandomResizedCrop(height=256, width=256, scale=(0.25, 1.0))])
+    
+    tranform_x = A.Compose([transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                            ToTensorV2()])
+    
+    transform_y = A.Compose([ToTensorV2()])
     
     path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transform=complete_transform, target_transform=complete_transform) #args.data_path
 
     batch_size = 1
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     for X, Y in train_loader:
         #X = preprocess(X)
+        X = tranform_x(X)
+        Y = transform_y(Y)
         prediction_Segnet = model_SegNet(X)
-        processed_SegNet = postprocess(prediction_Segnet, shape=(1024, 2048))
+        processed_SegNet = postprocess(prediction_Segnet, shape=(256, 256))
         print("Unique classes in SegNet prediction: ", np.unique(processed_SegNet))
 
         prediction_Unet = model_Unet(X)
-        processed_Unet = postprocess(prediction_Unet, shape=(1024, 2048))
+        processed_Unet = postprocess(prediction_Unet, shape=(256, 256))
         print("Unique classes in Unet prediction:   ", np.unique(processed_Unet))
 
-        fig, axs = plt.subplots(1, 2, figsize=(12, 6))  # 1 row, 2 columns
+        print(np.shape(Y))
+
+        Y = (Y*255).squeeze(1)
+        Y = utils.map_id_to_train_id(Y)
+        Y = Y.cpu().detach().numpy().transpose(1, 2, 0)
+        Y[Y == 255] = 0
+        X = X.cpu().detach().numpy().squeeze(0).transpose(1, 2, 0)
+        X = X * std + mean
+
+        fig, axs = plt.subplots(1, 4, figsize=(12, 6))  # 1 row, 2 columns
         axs[0].imshow(processed_SegNet, cmap=custom_cmap, norm=norm)
         axs[0].set_title('SegNet')
         axs[1].imshow(processed_Unet, cmap=custom_cmap, norm=norm)
         axs[1].set_title('Unet')
+        axs[2].imshow(Y, cmap=custom_cmap, norm=norm)
+        axs[2].set_title('Y')
+        axs[3].imshow(X)
+        axs[3].set_title('X')
         fig.suptitle('Segmentation')
         plt.savefig("Images\\segmented images of Unet and SegNet model.png")
         break
