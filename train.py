@@ -15,8 +15,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import utils
 import torch.nn.utils.prune as prune
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
