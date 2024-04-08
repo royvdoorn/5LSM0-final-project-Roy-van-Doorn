@@ -61,10 +61,18 @@ def main(args):
     regular_transform = transforms.Compose([transforms.Resize((256, 256)),
                                             transforms.ToTensor(),
                                             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+    
+    # define transform
+    complete_transform = transforms.Compose([transforms.Resize((256, 256)),
+                                            transforms.RandomVerticalFlip(p=0.25),
+                                            transforms.RandomResizedCrop(size=(256,256), scale=(0.25, 1.0), ratio=(0.5, 1.5)),
+                                            transforms.ToTensor()])
+
+    transform_x = transforms.Compose([transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     # data loading
     path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=regular_transform) #args.data_path
+    dataset = Cityscapes(args.data_path, split='train', mode='fine', target_type='semantic', transforms=complete_transform) #args.data_path
     validation_ratio = 0.1
     val_size = int(validation_ratio*len(dataset))
     train_size = len(dataset)-val_size
@@ -79,8 +87,8 @@ def main(args):
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.001)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.8)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
     epochs = 25
@@ -94,6 +102,7 @@ def main(args):
             target = (Y*255).long().squeeze(1)
             target = utils.map_id_to_train_id(target).to(device)
             optimizer.zero_grad()
+            X = transform_x(X)
             predictions = model(X).to(device)
             loss = criterion(predictions, target)
             loss.backward()
@@ -181,36 +190,27 @@ def visualize():
     norm = BoundaryNorm(bounds, len(colors))
 
     # define transform
-    #regular_transform = transforms.Compose([transforms.Resize((256, 256)),
-    #                                        transforms.ToTensor(),
-    #                                       transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+    regular_transform = transforms.Compose([transforms.Resize((256, 256)),
+                                            transforms.ToTensor(),
+                                            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
     
     # define transform
-    #complete_transform = transforms.Compose([transforms.Resize((256, 256)),
-    #                                        transforms.RandomVerticalFlip(p=0.25),
-    #                                        transforms.ToTensor()])
+    complete_transform = transforms.Compose([transforms.Resize((256, 256)),
+                                            transforms.RandomVerticalFlip(p=0.25),
                                             #transforms.RandomCrop((256,256))])
-                                            #transforms.RandomResizedCrop(size=(256,256))])#, scale=(0.25, 1.0), ratio=(0.5, 1.5))])
+                                            transforms.RandomResizedCrop(size=(256,256), scale=(0.25, 1.0), ratio=(0.5, 1.5)),
+                                            transforms.ToTensor()])
 
-    complete_transform = A.Compose([#A.resize(height=256, width=256),
-                                    A.VerticalFlip(p=0.25),
-                                    A.RandomResizedCrop(height=256, width=256, scale=(0.25, 1.0))])
-    
-    tranform_x = A.Compose([transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-                            ToTensorV2()])
-    
-    transform_y = A.Compose([ToTensorV2()])
-    
+    transform_x = transforms.Compose([transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+
     path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transform=complete_transform, target_transform=complete_transform) #args.data_path
+    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform)#, target_transform=complete_transform) #args.data_path
 
     batch_size = 1
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     for X, Y in train_loader:
-        #X = preprocess(X)
-        X = tranform_x(X)
-        Y = transform_y(Y)
+        #X = transform_x(X)
         prediction_Segnet = model_SegNet(X)
         processed_SegNet = postprocess(prediction_Segnet, shape=(256, 256))
         print("Unique classes in SegNet prediction: ", np.unique(processed_SegNet))
@@ -218,8 +218,6 @@ def visualize():
         prediction_Unet = model_Unet(X)
         processed_Unet = postprocess(prediction_Unet, shape=(256, 256))
         print("Unique classes in Unet prediction:   ", np.unique(processed_Unet))
-
-        print(np.shape(Y))
 
         Y = (Y*255).squeeze(1)
         Y = utils.map_id_to_train_id(Y)
@@ -311,9 +309,9 @@ if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    main(args)
+    #main(args)
 
-    #visualize()
+    visualize()
     #visualize_report()
     
     #prune_model()
