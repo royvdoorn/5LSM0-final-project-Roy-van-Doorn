@@ -121,13 +121,13 @@ def main(args):
             loss_val = criterion(predictions, target)
             val_loss_epoch += loss_val
 
-        train_loss.append(float(train_loss_epoch))
-        val_loss.append(float(val_loss_epoch))
-        print("Average train loss of epoch " + str(i+1) + ": " + str(float(train_loss_epoch)))
-        print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch)))
+        train_loss.append(float(train_loss_epoch/(len(train_loader)/batch_size)))
+        val_loss.append(float(val_loss_epoch/(len(val_loader)/batch_size)))
+        print("Average train loss of epoch " + str(i+1) + ": " + str(float(train_loss_epoch/(len(train_loader)/batch_size))))
+        print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch/(len(val_loader)/batch_size))))
 
     # save model
-    torch.save(model.state_dict(), 'SegNet model')
+    torch.save(model.state_dict(), 'SegNet model data aug')
 
     # visualize training data
     plt.plot(range(1, epochs+1), train_loss, color='r', label='train loss')
@@ -309,9 +309,9 @@ if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    #main(args)
+    main(args)
 
-    visualize()
+    #visualize()
     #visualize_report()
     
     #prune_model()
