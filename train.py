@@ -64,8 +64,8 @@ def main(args):
     
     # define transform
     complete_transform = transforms.Compose([transforms.Resize((256, 256)),
-                                            transforms.RandomVerticalFlip(p=0.25),
-                                            transforms.RandomResizedCrop(size=(256,256), scale=(0.25, 1.0), ratio=(0.5, 1.5)),
+                                            #transforms.RandomVerticalFlip(p=0.25),
+                                            transforms.RandomResizedCrop(size=(256,256)),#, scale=(0.25, 1.0), ratio=(0.5, 1.5)),
                                             transforms.ToTensor()])
 
     transform_x = transforms.Compose([transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
@@ -84,14 +84,15 @@ def main(args):
 
     # define model
     model = SegNet()#.cuda()
+    model.load_state_dict(torch.load("SegNet model"))
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.00001, weight_decay=0.0001)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
-    epochs = 25
+    epochs = 10
 
     train_loss = []
     val_loss = []
@@ -121,10 +122,10 @@ def main(args):
             loss_val = criterion(predictions, target)
             val_loss_epoch += loss_val
 
-        train_loss.append(float(train_loss_epoch/(len(train_loader)/batch_size)))
-        val_loss.append(float(val_loss_epoch/(len(val_loader)/batch_size)))
-        print("Average train loss of epoch " + str(i+1) + ": " + str(float(train_loss_epoch/(len(train_loader)/batch_size))))
-        print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch/(len(val_loader)/batch_size))))
+        train_loss.append(float(train_loss_epoch/len(train_loader)))
+        val_loss.append(float(val_loss_epoch/len(val_loader)))
+        print("Average train loss of epoch " + str(i+1) + ": " + str(float(train_loss_epoch/len(train_loader))))
+        print("Average validation loss of epoch " + str(i+1) + ": " + str(float(val_loss_epoch/len(val_loader))))
 
     # save model
     torch.save(model.state_dict(), 'SegNet model data aug')
@@ -172,11 +173,11 @@ def preprocess(img):
 
 def visualize():
     model_SegNet = SegNet()
-    model_SegNet.load_state_dict(torch.load("models\\SegNet model"))
+    model_SegNet.load_state_dict(torch.load("models\\SegNet model data aug"))
     model_SegNet.eval()
 
-    model_Unet = Unet()
-    model_Unet.load_state_dict(torch.load("models\\Original_model_25_epoch"))
+    model_Unet = SegNet()
+    model_Unet.load_state_dict(torch.load("models\\SegNet model"))
     model_Unet.eval()
 
     mean = [0.485, 0.456, 0.406]
@@ -196,7 +197,7 @@ def visualize():
     
     # define transform
     complete_transform = transforms.Compose([transforms.Resize((256, 256)),
-                                            transforms.RandomVerticalFlip(p=0.25),
+                                            #transforms.RandomVerticalFlip(p=0.25),
                                             #transforms.RandomCrop((256,256))])
                                             transforms.RandomResizedCrop(size=(256,256), scale=(0.25, 1.0), ratio=(0.5, 1.5)),
                                             transforms.ToTensor()])
@@ -204,13 +205,13 @@ def visualize():
     transform_x = transforms.Compose([transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     path_local = "C:\\Users\\20192326\\Documents\\YEAR 1 AIES\\Neural networks for computer vision\\Assignment\\data"
-    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=regular_transform)#, target_transform=complete_transform) #args.data_path
+    dataset = Cityscapes(path_local, split='train', mode='fine', target_type='semantic', transforms=complete_transform)#, target_transform=complete_transform) #args.data_path
 
     batch_size = 1
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     for X, Y in train_loader:
-        #X = transform_x(X)
+        X = transform_x(X)
         prediction_Segnet = model_SegNet(X)
         processed_SegNet = postprocess(prediction_Segnet, shape=(256, 256))
         print("Unique classes in SegNet prediction: ", np.unique(processed_SegNet))
@@ -309,9 +310,9 @@ if __name__ == "__main__":
     # Get the arguments
     parser = get_arg_parser()
     args = parser.parse_args()
-    main(args)
+    #main(args)
 
-    #visualize()
+    visualize()
     #visualize_report()
     
     #prune_model()
