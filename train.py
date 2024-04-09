@@ -66,7 +66,8 @@ def main(args):
     complete_transform = transforms.Compose([transforms.Resize((256, 256)),
                                             #transforms.RandomVerticalFlip(p=0.25),
                                             transforms.RandomResizedCrop(size=(256,256)),#, scale=(0.25, 1.0), ratio=(0.5, 1.5)),
-                                            transforms.ToTensor()])
+                                            transforms.ToTensor(),
+                                            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     transform_x = transforms.Compose([transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
@@ -84,7 +85,7 @@ def main(args):
 
     # define model
     model = SegNet()#.cuda()
-    model.load_state_dict(torch.load("SegNet model"))
+    #model.load_state_dict(torch.load("SegNet model"))
 
     # define optimizer and loss function (don't forget to ignore class index 255)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=255).to(device)
@@ -92,7 +93,7 @@ def main(args):
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 0.9)
 
     # training/validation loop
-    epochs = 10
+    epochs = 5
 
     train_loss = []
     val_loss = []
@@ -103,7 +104,6 @@ def main(args):
             target = (Y*255).long().squeeze(1)
             target = utils.map_id_to_train_id(target).to(device)
             optimizer.zero_grad()
-            X = transform_x(X)
             predictions = model(X).to(device)
             loss = criterion(predictions, target)
             loss.backward()
@@ -198,9 +198,9 @@ def visualize():
     # define transform
     complete_transform = transforms.Compose([transforms.Resize((256, 256)),
                                             #transforms.RandomVerticalFlip(p=0.25),
-                                            #transforms.RandomCrop((256,256))])
-                                            transforms.RandomResizedCrop(size=(256,256), scale=(0.25, 1.0), ratio=(0.5, 1.5)),
-                                            transforms.ToTensor()])
+                                            transforms.RandomResizedCrop(size=(256,256)),#, scale=(0.25, 1.0), ratio=(0.5, 1.5)),
+                                            transforms.ToTensor(),
+                                            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     transform_x = transforms.Compose([transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
@@ -211,10 +211,10 @@ def visualize():
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     for X, Y in train_loader:
-        X = transform_x(X)
         prediction_Segnet = model_SegNet(X)
         processed_SegNet = postprocess(prediction_Segnet, shape=(256, 256))
         print("Unique classes in SegNet prediction: ", np.unique(processed_SegNet))
+        print(processed_SegNet)
 
         prediction_Unet = model_Unet(X)
         processed_Unet = postprocess(prediction_Unet, shape=(256, 256))
@@ -225,13 +225,13 @@ def visualize():
         Y = Y.cpu().detach().numpy().transpose(1, 2, 0)
         Y[Y == 255] = 0
         X = X.cpu().detach().numpy().squeeze(0).transpose(1, 2, 0)
-        X = X * std + mean
+        #X = X * std + mean
 
         fig, axs = plt.subplots(1, 4, figsize=(12, 6))  # 1 row, 2 columns
         axs[0].imshow(processed_SegNet, cmap=custom_cmap, norm=norm)
-        axs[0].set_title('SegNet')
+        axs[0].set_title('SegNet data aug')
         axs[1].imshow(processed_Unet, cmap=custom_cmap, norm=norm)
-        axs[1].set_title('Unet')
+        axs[1].set_title('SegNet')
         axs[2].imshow(Y, cmap=custom_cmap, norm=norm)
         axs[2].set_title('Y')
         axs[3].imshow(X)
